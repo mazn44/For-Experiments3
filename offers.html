@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التسوق والعروض | إيفان</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { fontFamily: { tajawal: ['Tajawal', 'sans-serif'] }, colors: { ivan: { red: '#B11216' } } } }
+        }
+    </script>
+    <style>
+        .glass-panel { background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 8px 32px rgba(0,0,0,0.06); }
+        .dark .glass-panel { background: rgba(20,20,28,0.85); border: 1px solid rgba(255,255,255,0.05); }
+        .bg-gradient-custom { background: linear-gradient(135deg, #f0f4f8 0%, #dce6f0 100%); }
+        .dark .bg-gradient-custom { background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); }
+        #adminModal, #loginModal { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; }
+        .modal-box { background: white; border-radius: 24px; padding: 32px; max-width: 480px; width: 94%; }
+        .dark .modal-box { background: #1a1a24; color: white; }
+    </style>
+</head>
+<body class="bg-gradient-custom text-gray-800 dark:text-gray-100 font-tajawal min-h-screen pb-16">
+
+<div class="fixed top-0 left-0 right-0 z-50 p-4 glass-panel flex items-center justify-between rounded-b-3xl">
+    <a href="index.html" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 transition-colors">
+        <i class="fas fa-arrow-right"></i>
+    </a>
+    <h1 class="font-bold text-lg text-ivan-red dark:text-white">التسوق والعروض</h1>
+    <button onclick="handleAdminClick()" class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-900/20 text-ivan-red flex items-center justify-center">
+        <i class="fas fa-lock"></i>
+    </button>
+</div>
+
+<main class="max-w-md mx-auto px-4 pt-24">
+    <div id="offersGrid" class="grid grid-cols-1 gap-5">
+        <div class="text-center py-20 text-gray-400" id="offersEmpty">
+            <i class="fas fa-spinner fa-spin text-4xl mb-3"></i>
+            <p>جارٍ تحميل العروض من السحابة...</p>
+            <p class="text-xs mt-2 text-red-400 hidden" id="rulesError">إذا استمر التحميل طويلاً، يرجى تفعيل قواعد Firebase (شرحتها لك).</p>
+        </div>
+    </div>
+</main>
+
+<div id="loginModal" class="hidden">
+    <div class="modal-box">
+        <h3 class="text-lg font-bold text-center mb-4">لوحة إدارة المنتجات</h3>
+        <input type="password" id="adminPass" placeholder="كلمة المرور" class="w-full border rounded-xl px-4 py-3 text-black mb-3 focus:outline-none focus:ring-2 focus:ring-ivan-red">
+        <div class="flex gap-3">
+            <button onclick="checkPass()" class="flex-1 py-3 bg-ivan-red text-white rounded-xl font-bold">دخول</button>
+            <button onclick="document.getElementById('loginModal').classList.add('hidden')" class="flex-1 py-3 bg-gray-200 text-gray-800 rounded-xl font-bold">إلغاء</button>
+        </div>
+        <p id="errTxt" class="text-red-500 text-sm text-center mt-3 hidden">كلمة مرور خاطئة</p>
+    </div>
+</div>
+
+<div id="adminModal" class="hidden">
+    <div class="modal-box max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold">إضافة عرض جديد</h3>
+            <button onclick="document.getElementById('adminModal').classList.add('hidden')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="flex flex-col gap-3 mb-6">
+            <input type="text" id="oTitle" placeholder="اسم المنتج/العرض" class="w-full border rounded-xl px-4 py-2 text-black">
+            <textarea id="oDesc" placeholder="تفاصيل والسعر" rows="2" class="w-full border rounded-xl px-4 py-2 text-black"></textarea>
+            <input type="file" id="oFile" accept="image/*,video/*" class="w-full text-sm">
+            <button onclick="uploadOffer()" id="upBtn" class="w-full py-3 bg-ivan-red text-white rounded-xl font-bold">رفع المنتج للسحابة</button>
+            <p id="upStatus" class="text-center text-sm font-bold text-ivan-red hidden">جارٍ الرفع...</p>
+        </div>
+        <h3 class="font-bold mb-3 border-t pt-4">المنتجات الحالية (للحذف)</h3>
+        <div id="adminList" class="flex flex-col gap-2"><p class="text-sm text-gray-500">جاري التحميل...</p></div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
+
+    const cfg = {
+        apiKey: "AIzaSyDuZsa00WSYbLD9zhGQKBQh6dS-5JHBZlw",
+        authDomain: "customer-service-3-aa881.firebaseapp.com",
+        projectId: "customer-service-3-aa881",
+        storageBucket: "customer-service-3-aa881.firebasestorage.app"
+    };
+
+    const app = initializeApp(cfg);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+    const pass = "Ivan!_Mzn@2026_#$*";
+    const wa = "9647514844125";
+
+    // Show rules error hint if it takes more than 3 seconds
+    setTimeout(() => { const err = document.getElementById('rulesError'); if(err) err.classList.remove('hidden'); }, 3000);
+
+    async function loadOffers() {
+        const grid = document.getElementById('offersGrid');
+        try {
+            const q = query(collection(db, 'offers'), orderBy('createdAt', 'desc'));
+            const snap = await getDocs(q);
+            if (snap.empty) { grid.innerHTML = '<p class="text-center py-10 text-gray-500">لا توجد منتجات حالياً.</p>'; return; }
+            grid.innerHTML = '';
+            snap.forEach(s => {
+                const d = s.data();
+                grid.innerHTML += `
+                <div class="glass-panel rounded-2xl overflow-hidden shadow-lg">
+                    ${d.mediaType === 'video' ? `<video src="${d.mediaUrl}" controls class="w-full h-56 object-cover"></video>` : `<img src="${d.mediaUrl}" class="w-full h-56 object-cover">`}
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">${d.title}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">${d.desc}</p>
+                        <a href="https://wa.me/${wa}?text=مرحباً، أستفسر عن: ${d.title}" class="w-full flex justify-center gap-2 py-3 bg-green-500 text-white rounded-xl font-bold"><i class="fab fa-whatsapp text-lg"></i> اطلب الآن</a>
+                    </div>
+                </div>`;
+            });
+        } catch(e) {
+            console.error(e);
+            grid.innerHTML = '<div class="text-center py-10 text-red-500"><i class="fas fa-exclamation-triangle text-3xl mb-2"></i><p>تعذر الاتصال بالسحابة.</p><p class="text-xs mt-1">يجب تفعيل قواعد Firebase (Rules).</p></div>';
+        }
+    }
+
+    async function loadAdminList() {
+        const list = document.getElementById('adminList');
+        try {
+            const q = query(collection(db, 'offers'), orderBy('createdAt', 'desc'));
+            const snap = await getDocs(q);
+            list.innerHTML = '';
+            if (snap.empty) { list.innerHTML = '<p class="text-sm">لا يوجد شيء.</p>'; return; }
+            snap.forEach(s => {
+                const d = s.data();
+                list.innerHTML += `<div class="flex items-center justify-between p-2 bg-gray-100 rounded-lg"><span class="text-sm font-bold truncate">${d.title}</span><button onclick="window.delOffer('${s.id}', '${d.storagePath}')" class="text-red-500 px-2"><i class="fas fa-trash"></i></button></div>`;
+            });
+        } catch(e) {}
+    }
+
+    window.uploadOffer = async () => {
+        const file = document.getElementById('oFile').files[0];
+        const title = document.getElementById('oTitle').value;
+        if(!file || !title) return alert('أدخل العنوان واختر ملف!');
+        
+        document.getElementById('upBtn').classList.add('hidden');
+        document.getElementById('upStatus').classList.remove('hidden');
+        
+        const sRef = ref(storage, `offers/${Date.now()}_${file.name}`);
+        const task = uploadBytesResumable(sRef, file);
+        
+        task.on('state_changed', null, (err) => {
+            alert('حدث خطأ بسبب حماية السحابة. تحقق من Rules.');
+            document.getElementById('upBtn').classList.remove('hidden');
+            document.getElementById('upStatus').classList.add('hidden');
+        }, async () => {
+            const url = await getDownloadURL(task.snapshot.ref);
+            await addDoc(collection(db, 'offers'), {
+                title, desc: document.getElementById('oDesc').value,
+                mediaUrl: url, mediaType: file.type.startsWith('video') ? 'video' : 'image',
+                storagePath: sRef.fullPath, createdAt: new Date()
+            });
+            alert('تم الرفع بنجاح!');
+            document.getElementById('upBtn').classList.remove('hidden');
+            document.getElementById('upStatus').classList.add('hidden');
+            loadOffers(); loadAdminList();
+        });
+    }
+
+    window.delOffer = async (id, path) => {
+        if(!confirm('حذف؟')) return;
+        await deleteDoc(doc(db, 'offers', id));
+        if(path) try { await deleteObject(ref(storage, path)); } catch(e){}
+        loadOffers(); loadAdminList();
+    }
+
+    window.checkPass = () => {
+        if(document.getElementById('adminPass').value === pass) {
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('adminModal').classList.remove('hidden');
+            loadAdminList();
+        } else {
+            document.getElementById('errTxt').classList.remove('hidden');
+        }
+    }
+
+    loadOffers();
+</script>
+
+<script>
+    // Theme setup
+    if(localStorage.getItem('theme')==='dark') document.documentElement.classList.add('dark');
+    
+    // 10 Clicks logic
+    let clicks = 0, timer;
+    window.handleAdminClick = () => {
+        clicks++;
+        clearTimeout(timer);
+        timer = setTimeout(() => clicks = 0, 2000);
+        if(clicks >= 10) {
+            clicks = 0;
+            document.getElementById('adminPass').value = '';
+            document.getElementById('errTxt').classList.add('hidden');
+            document.getElementById('loginModal').classList.remove('hidden');
+        }
+    }
+</script>
+</body>
+</html>
