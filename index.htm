@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>معرض إيفان | Ivan Showroom</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,17 +24,13 @@
                         ivan: { red: '#B11216', dark: '#1A1A1A', gold: '#D4AF37' }
                     },
                     animation: {
-                        'shine': 'shine 4s linear infinite',
                         'float': 'float 6s ease-in-out infinite',
                         'fadeIn': 'fadeIn 0.5s ease forwards',
-                        'slideIn': 'slideIn 0.4s cubic-bezier(0.4,0,0.2,1) forwards',
                         'pulse-slow': 'pulse 3s cubic-bezier(0.4,0,0.6,1) infinite',
                     },
                     keyframes: {
-                        shine: { '0%': { backgroundPosition: '200% center' }, '100%': { backgroundPosition: '-200% center' } },
                         float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
                         fadeIn: { from: { opacity: '0', transform: 'translateY(16px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
-                        slideIn: { from: { transform: 'translateX(100%)' }, to: { transform: 'translateX(0)' } },
                     }
                 }
             }
@@ -41,9 +38,9 @@
     </script>
 
     <style>
-        :root {
-            --sidebar-w: 300px;
-        }
+        :root { --sidebar-w: 300px; }
+        
+        /* التأثيرات الزجاجية */
         .glass-panel {
             background: rgba(255,255,255,0.82);
             backdrop-filter: blur(20px);
@@ -56,22 +53,39 @@
             border: 1px solid rgba(255,255,255,0.07);
             box-shadow: 0 8px 32px rgba(0,0,0,0.45);
         }
+
+        /* حيوية وتوهج النص (Shine Effect) المضبوط 100% */
         .text-shine {
             background: linear-gradient(to right, #1A1A1A 20%, #B11216 40%, #B11216 60%, #1A1A1A 80%);
             background-size: 200% auto;
+            color: #B11216;
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: shine 4s linear infinite;
+            animation: customShine 3.5s linear infinite;
         }
         .dark .text-shine {
             background: linear-gradient(to right, #FFFFFF 20%, #D4AF37 40%, #D4AF37 60%, #FFFFFF 80%);
             background-size: 200% auto;
+            color: #D4AF37;
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: shine 4s linear infinite;
+            animation: customShine 3.5s linear infinite;
         }
+        @keyframes customShine {
+            to { background-position: 200% center; }
+        }
+
+        /* توهج خفيف للوجو ليكون حياً (Breathing Glow) */
+        .logo-glow-ring {
+            animation: breathe 3s ease-in-out infinite alternate;
+        }
+        @keyframes breathe {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            100% { transform: scale(1.15); opacity: 0.8; }
+        }
+
         .bg-gradient-custom { background: linear-gradient(135deg, #f0f4f8 0%, #dce6f0 100%); }
         .dark .bg-gradient-custom { background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%); }
         ::-webkit-scrollbar { width: 5px; }
@@ -80,46 +94,26 @@
 
         /* SIDEBAR */
         #sidebar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            height: 100vh;
-            width: var(--sidebar-w);
-            z-index: 200;
-            transform: translateX(100%);
-            transition: transform 0.38s cubic-bezier(0.4,0,0.2,1);
-            overflow-y: auto;
+            position: fixed; top: 0; right: 0; height: 100vh; width: var(--sidebar-w); z-index: 200;
+            transform: translateX(100%); transition: transform 0.38s cubic-bezier(0.4,0,0.2,1); overflow-y: auto;
         }
         #sidebar.open { transform: translateX(0); }
         #sidebarOverlay {
-            position: fixed; inset: 0; z-index: 199;
-            background: rgba(0,0,0,0.45);
-            backdrop-filter: blur(4px);
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.35s;
+            position: fixed; inset: 0; z-index: 199; background: rgba(0,0,0,0.45); backdrop-filter: blur(4px);
+            opacity: 0; pointer-events: none; transition: opacity 0.35s;
         }
         #sidebarOverlay.visible { opacity: 1; pointer-events: all; }
 
-        /* Sidebar nav item hover */
-        .sidebar-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 12px 18px; border-radius: 14px;
-            cursor: pointer; transition: all 0.2s;
-            font-size: 15px; font-weight: 600;
-        }
+        .sidebar-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-radius: 14px; cursor: pointer; transition: all 0.2s; font-size: 15px; font-weight: 600; }
         .sidebar-item:hover { background: rgba(177,18,22,0.10); color: #B11216; }
         .dark .sidebar-item:hover { background: rgba(212,175,55,0.12); color: #D4AF37; }
         .sidebar-item .icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink:0; }
 
-        /* Card hover */
         .action-card { transition: all 0.28s cubic-bezier(0.4,0,0.2,1); }
         .action-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
-
-        /* Contact option button */
         .contact-btn { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 14px; font-weight: 700; font-size: 15px; transition: all 0.22s; }
         .contact-btn:hover { transform: scale(1.03); }
 
-        /* Animation stagger */
         .stagger-1 { animation: fadeIn 0.5s 0.05s ease both; }
         .stagger-2 { animation: fadeIn 0.5s 0.15s ease both; }
         .stagger-3 { animation: fadeIn 0.5s 0.25s ease both; }
@@ -150,99 +144,52 @@
     </div>
 
     <nav class="flex-1 p-4 flex flex-col gap-1">
-
         <a href="https://maps.app.goo.gl/u6zP3XLVnA5xSKRGA?g_st=ac" target="_blank" class="sidebar-item bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 mb-2 border border-blue-200 dark:border-blue-700/40">
             <span class="icon bg-blue-600 text-white"><i class="fab fa-google"></i></span>
-            <div>
-                <div class="text-sm font-bold">قيّمنا على Google</div>
-                <div class="text-[10px] text-blue-500 dark:text-blue-400 font-normal">⭐ رأيك يصنع الفرق</div>
-            </div>
+            <div><div class="text-sm font-bold">قيّمنا على Google</div><div class="text-[10px] text-blue-500 dark:text-blue-400 font-normal">⭐ رأيك يصنع الفرق</div></div>
         </a>
-
         <a href="https://wa.me/9647511869710" target="_blank" class="sidebar-item text-gray-700 dark:text-gray-200">
             <span class="icon bg-green-500 text-white"><i class="fab fa-whatsapp"></i></span>
-            <div>
-                <div class="text-sm">ملاحظات وشكاوي</div>
-                <div class="text-[10px] text-gray-400 font-normal">ب ڕێيا واتسئاپێ</div>
-            </div>
+            <div><div class="text-sm">ملاحظات وشكاوي</div><div class="text-[10px] text-gray-400 font-normal">ب ڕێيا واتسئاپێ</div></div>
         </a>
-
         <div class="h-px bg-gray-200 dark:bg-gray-700 my-2"></div>
-
         <a href="offers.html" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right">
             <span class="icon bg-ivan-red text-white"><i class="fas fa-shopping-bag"></i></span>
-            <div>
-                <div class="text-sm">التسوق والعروض (صفحة مستقلة)</div>
-                <div class="text-[10px] text-gray-400 font-normal">پێشكەشكاریێن تایبەت</div>
-            </div>
+            <div><div class="text-sm">التسوق والعروض (صفحة مستقلة)</div><div class="text-[10px] text-gray-400 font-normal">پێشكەشكاریێن تایبەت</div></div>
         </a>
         <button onclick="scrollToSection('#contact'); closeSidebar()" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right">
             <span class="icon bg-emerald-500 text-white"><i class="fas fa-headset"></i></span>
-            <div>
-                <div class="text-sm">خدمة العملاء</div>
-                <div class="text-[10px] text-gray-400 font-normal">خزمەتا كریارانێ</div>
-            </div>
+            <div><div class="text-sm">خدمة العملاء</div><div class="text-[10px] text-gray-400 font-normal">خزمەتا كریارانێ</div></div>
         </button>
         <button onclick="scrollToSection('#used'); closeSidebar()" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right">
             <span class="icon bg-amber-500 text-white"><i class="fas fa-recycle"></i></span>
-            <div>
-                <div class="text-sm">قسم الأثاث المستعمل</div>
-                <div class="text-[10px] text-gray-400 font-normal">بەشا ڕووکارێ بهراندî</div>
-            </div>
+            <div><div class="text-sm">قسم الأثاث المستعمل</div><div class="text-[10px] text-gray-400 font-normal">بەشا ڕووکارێ بهراندî</div></div>
         </button>
         <button onclick="scrollToSection('#branches'); closeSidebar()" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right">
             <span class="icon bg-purple-500 text-white"><i class="fas fa-store"></i></span>
-            <div>
-                <div class="text-sm">الفروع المعتمدة</div>
-                <div class="text-[10px] text-gray-400 font-normal">لقێن فرمی</div>
-            </div>
+            <div><div class="text-sm">الفروع المعتمدة</div><div class="text-[10px] text-gray-400 font-normal">لقێن فرمی</div></div>
         </button>
         <button onclick="scrollToSection('#factories'); closeSidebar()" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right">
             <span class="icon bg-gray-600 text-white"><i class="fas fa-industry"></i></span>
-            <div>
-                <div class="text-sm">معامل إيفان</div>
-                <div class="text-[10px] text-gray-400 font-normal">کارگەهێن ئیڤان</div>
-            </div>
+            <div><div class="text-sm">معامل إيفان</div><div class="text-[10px] text-gray-400 font-normal">کارگەهێن ئیڤان</div></div>
         </button>
         <button onclick="scrollToSection('#about'); closeSidebar()" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right">
             <span class="icon bg-cyan-500 text-white"><i class="fas fa-info-circle"></i></span>
-            <div>
-                <div class="text-sm">قصتنا وهدفنا</div>
-                <div class="text-[10px] text-gray-400 font-normal">çîroka me û armanca me</div>
-            </div>
+            <div><div class="text-sm">قصتنا وهدفنا</div><div class="text-[10px] text-gray-400 font-normal">çîroka me û armanca me</div></div>
         </button>
         <button onclick="scrollToSection('#hours'); closeSidebar()" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right">
             <span class="icon bg-yellow-500 text-white"><i class="fas fa-clock"></i></span>
-            <div>
-                <div class="text-sm">أوقات الدوام</div>
-                <div class="text-[10px] text-gray-400 font-normal">سەعەتێن xebatê</div>
-            </div>
+            <div><div class="text-sm">أوقات الدوام</div><div class="text-[10px] text-gray-400 font-normal">سەعەتێن xebatê</div></div>
         </button>
-
-        <div class="h-px bg-gray-200 dark:bg-gray-700 my-2"></div>
-
-        <a href="https://maps.app.goo.gl/u6zP3XLVnA5xSKRGA?g_st=ac" target="_blank" class="sidebar-item text-gray-700 dark:text-gray-200">
-            <span class="icon bg-ivan-red text-white"><i class="fas fa-globe"></i></span>
-            <div>
-                <div class="text-sm">موقعنا على الخريطة</div>
-                <div class="text-[10px] text-gray-400 font-normal">Google Maps</div>
-            </div>
-        </a>
     </nav>
-
     <div class="p-4 border-t border-gray-100 dark:border-gray-700/50">
         <p class="text-[11px] text-center text-gray-400 mb-3 font-medium">تابعنا | مە ب شۆپینن</p>
         <div class="flex justify-center gap-3">
-            <a href="https://www.instagram.com/ma3rd_ivan1?igsh=dDF4Y2dnYXZ5eGZ3" target="_blank" class="w-9 h-9 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white flex items-center justify-center text-sm shadow hover:-translate-y-1 transition-transform">
-                <i class="fab fa-instagram"></i></a>
-            <a href="https://www.tiktok.com/@ma3rdivan1" target="_blank" class="w-9 h-9 rounded-full bg-black dark:bg-gray-700 text-white flex items-center justify-center text-sm shadow hover:-translate-y-1 transition-transform border border-gray-600">
-                <i class="fab fa-tiktok"></i></a>
-            <a href="https://www.facebook.com/share/1BLDRvJGzr/" target="_blank" class="w-9 h-9 rounded-full bg-[#1877F2] text-white flex items-center justify-center text-sm shadow hover:-translate-y-1 transition-transform">
-                <i class="fab fa-facebook-f"></i></a>
-            <a href="https://www.snapchat.com/add/ivan2012i?src=QR_CODE" target="_blank" class="w-9 h-9 rounded-full bg-yellow-400 text-black flex items-center justify-center text-sm shadow hover:-translate-y-1 transition-transform">
-                <i class="fab fa-snapchat-ghost"></i></a>
+            <a href="https://www.instagram.com/ma3rd_ivan1?igsh=dDF4Y2dnYXZ5eGZ3" target="_blank" class="w-9 h-9 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white flex items-center justify-center text-sm shadow hover:-translate-y-1 transition-transform"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@ma3rdivan1" target="_blank" class="w-9 h-9 rounded-full bg-black dark:bg-gray-700 text-white flex items-center justify-center text-sm shadow hover:-translate-y-1 transition-transform border border-gray-600"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.facebook.com/share/1BLDRvJGzr/" target="_blank" class="w-9 h-9 rounded-full bg-[#1877F2] text-white flex items-center justify-center text-sm shadow hover:-translate-y-1 transition-transform"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.snapchat.com/add/ivan2012i?src=QR_CODE" target="_blank" class="w-9 h-9 rounded-full bg-yellow-400 text-black flex items-center justify-center text-sm shadow hover:-translate-y-1 transition-transform"><i class="fab fa-snapchat-ghost"></i></a>
         </div>
-        <p class="text-[10px] text-center text-gray-400 mt-4">Copyright © 2026 Ivan Showroom</p>
     </div>
 </aside>
 
@@ -259,21 +206,21 @@
 <main class="relative z-10 max-w-md mx-auto px-4 pt-20 pb-16 flex flex-col items-center min-h-screen">
 
     <header class="text-center mb-6 flex flex-col items-center stagger-1">
-        <div class="relative w-32 h-32 mb-4 group cursor-pointer">
-            <div class="absolute inset-0 bg-ivan-red dark:bg-white rounded-full blur-lg opacity-40 group-hover:opacity-65 transition-opacity duration-500"></div>
+        <div class="relative w-36 h-36 mb-5 cursor-pointer animate-float">
+            <div class="absolute inset-0 bg-ivan-red dark:bg-ivan-gold rounded-full blur-xl logo-glow-ring"></div>
             <img src="1000519787.jpg" alt="Ivan Showroom Logo"
-                 class="relative w-full h-full object-cover rounded-full border-4 border-white dark:border-gray-800 shadow-2xl transition-transform duration-500 group-hover:scale-105"
+                 class="relative z-10 w-full h-full object-cover rounded-full border-4 border-white dark:border-gray-800 shadow-2xl transition-transform duration-500 hover:scale-105"
                  onerror="this.style.display='none'">
         </div>
-        <h1 class="text-4xl font-bold mb-1 text-shine">معرض إيفان</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium tracking-wide">پێشانگەها ئیڤان</p>
+        
+        <h1 class="text-5xl font-extrabold mb-1 text-shine drop-shadow-md pb-1">معرض إيفان</h1>
+        
+        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium tracking-wide mt-1">پێشانگەها ئیڤان</p>
     </header>
 
     <div class="w-full relative rounded-3xl overflow-hidden shadow-2xl mb-8 group border border-white/40 dark:border-white/10 stagger-2">
         <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10 pointer-events-none"></div>
-        <img src="1000596284.jpg" alt="واجهة معرض إيفان"
-             class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-700"
-             onerror="this.style.background='linear-gradient(135deg,#1a1a1a,#B11216)'; this.style.height='256px'">
+        <img src="1000596284.jpg" alt="واجهة معرض إيفان" class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-700" onerror="this.style.background='linear-gradient(135deg,#1a1a1a,#B11216)'; this.style.height='256px'">
         <div class="absolute bottom-0 left-0 right-0 z-20 p-5 text-white">
             <p class="font-bold text-xl leading-snug">أهلاً وسهلاً بكم</p>
             <p class="text-sm text-white/75">خوش هاتین — دهوك، زركا</p>
@@ -281,13 +228,9 @@
     </div>
 
     <div class="w-full flex flex-col gap-4 mb-8">
-
-        <a href="https://maps.app.goo.gl/u6zP3XLVnA5xSKRGA?g_st=ac" target="_blank"
-           class="action-card group glass-panel rounded-3xl p-4 flex items-center justify-between relative overflow-hidden border-2 border-transparent hover:border-blue-400/40 stagger-1">
+        <a href="https://maps.app.goo.gl/u6zP3XLVnA5xSKRGA?g_st=ac" target="_blank" class="action-card group glass-panel rounded-3xl p-4 flex items-center justify-between relative overflow-hidden border-2 border-transparent hover:border-blue-400/40 stagger-1">
             <div class="flex items-center gap-4 relative z-10">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg text-white text-2xl">
-                    <i class="fab fa-google"></i>
-                </div>
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg text-white text-2xl"><i class="fab fa-google"></i></div>
                 <div class="text-right">
                     <span class="font-bold text-gray-800 dark:text-white text-base block leading-snug">رأيك يهمنا — قيّمنا على Google</span>
                     <span class="text-[11px] text-gray-500 dark:text-gray-400">خزمەتا مە ل سەر گووگڵ هەلسەنگینە ⭐</span>
@@ -295,13 +238,9 @@
             </div>
             <i class="fas fa-chevron-left text-gray-400 group-hover:text-blue-500 transition-colors text-lg mr-1"></i>
         </a>
-
-        <a href="https://wa.me/9647511869710" target="_blank"
-           class="action-card group glass-panel rounded-3xl p-4 flex items-center justify-between relative overflow-hidden border-2 border-transparent hover:border-green-400/40 stagger-2">
+        <a href="https://wa.me/9647511869710" target="_blank" class="action-card group glass-panel rounded-3xl p-4 flex items-center justify-between relative overflow-hidden border-2 border-transparent hover:border-green-400/40 stagger-2">
             <div class="flex items-center gap-4 relative z-10">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-lg text-white text-2xl">
-                    <i class="fab fa-whatsapp"></i>
-                </div>
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-lg text-white text-2xl"><i class="fab fa-whatsapp"></i></div>
                 <div class="text-right">
                     <span class="font-bold text-gray-800 dark:text-white text-base block leading-snug">ملاحظة أو شكوى؟ تواصل معنا</span>
                     <span class="text-[11px] text-gray-500 dark:text-gray-400">ب ڕێيا واتسئاپێ پەیوەندیێ ب مە بکەن</span>
@@ -309,13 +248,9 @@
             </div>
             <i class="fas fa-chevron-left text-gray-400 group-hover:text-green-500 transition-colors text-lg mr-1"></i>
         </a>
-
-        <a href="offers.html"
-           class="action-card group glass-panel rounded-3xl p-4 flex items-center justify-between relative overflow-hidden border-2 border-transparent hover:border-red-400/40 w-full text-right stagger-3">
+        <a href="offers.html" class="action-card group glass-panel rounded-3xl p-4 flex items-center justify-between relative overflow-hidden border-2 border-transparent hover:border-red-400/40 w-full text-right stagger-3">
             <div class="flex items-center gap-4 relative z-10">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-ivan-red to-red-800 flex items-center justify-center shadow-lg text-white text-2xl">
-                    <i class="fas fa-shopping-cart"></i>
-                </div>
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-ivan-red to-red-800 flex items-center justify-center shadow-lg text-white text-2xl"><i class="fas fa-shopping-cart"></i></div>
                 <div class="text-right">
                     <span class="font-bold text-gray-800 dark:text-white text-base block leading-snug">التسوق والعروض الحصرية</span>
                     <span class="text-[11px] text-gray-500 dark:text-gray-400">تصفح أحدث عروض المعرض</span>
@@ -326,254 +261,71 @@
     </div>
 
     <section id="contact" class="w-full mb-8 stagger-4">
-        <div class="flex items-center gap-3 mb-4">
-            <div class="w-1 h-8 bg-emerald-500 rounded-full"></div>
-            <div>
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">خدمة العملاء</h2>
-                <p class="text-[11px] text-gray-500 dark:text-gray-400">خزمەتا كریارانێ — پەیوەندی بکەن</p>
-            </div>
-        </div>
-
+        <div class="flex items-center gap-3 mb-4"><div class="w-1 h-8 bg-emerald-500 rounded-full"></div><div><h2 class="text-xl font-bold text-gray-900 dark:text-white">خدمة العملاء</h2><p class="text-[11px] text-gray-500 dark:text-gray-400">خزمەتا كریارانێ — پەیوەندی بکەن</p></div></div>
         <div class="glass-panel rounded-3xl p-5 flex flex-col gap-3">
-            <p class="text-sm text-gray-700 dark:text-gray-300 font-medium mb-1">تواصل مباشر مع خدمة العملاء</p>
-            <p class="text-[11px] text-gray-500 dark:text-gray-400 mb-3">ب ڕاستی پەیوەندیێ ب خزمەتا كریارانێ بکەن</p>
-
             <button onclick="toggleDropdown('contactList')" class="w-full flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-xl font-bold text-gray-800 dark:text-white transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 shadow-sm">
                 <div class="flex items-center gap-2"><i class="fas fa-headset text-emerald-500"></i> اختر طريقة التواصل</div>
                 <i class="fas fa-chevron-down transition-transform duration-300" id="contactList-icon"></i>
             </button>
-
             <div id="contactList" class="hidden flex-col gap-3 mt-2 animate-fadeIn">
-                <a href="https://wa.me/9647514844125" target="_blank" class="contact-btn bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700/40 hover:bg-green-100 dark:hover:bg-green-900/40">
-                    <div class="w-10 h-10 rounded-xl bg-green-500 text-white flex items-center justify-center text-lg shadow">
-                        <i class="fab fa-whatsapp"></i>
-                    </div>
-                    <div>
-                        <div class="text-sm font-bold">واتساب</div>
-                        <div class="text-[11px] text-green-600 dark:text-green-400">+964 751 484 4125</div>
-                    </div>
-                    <i class="fas fa-arrow-left mr-auto text-green-400 text-sm"></i>
-                </a>
-
-                <a href="viber://chat?number=9647514844125" class="contact-btn bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700/40 hover:bg-purple-100 dark:hover:bg-purple-900/40">
-                    <div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center text-lg shadow">
-                        <i class="fab fa-viber"></i>
-                    </div>
-                    <div>
-                        <div class="text-sm font-bold">فايبر</div>
-                        <div class="text-[11px] text-purple-600 dark:text-purple-400">+964 751 484 4125</div>
-                    </div>
-                    <i class="fas fa-arrow-left mr-auto text-purple-400 text-sm"></i>
-                </a>
-
-                <a href="tel:+9647514844125" class="contact-btn bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-700/40 hover:bg-orange-100 dark:hover:bg-orange-900/40">
-                    <div class="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center text-lg shadow">
-                        <i class="fas fa-phone"></i>
-                    </div>
-                    <div>
-                        <div class="text-sm font-bold">كورك — مكالمة مباشرة</div>
-                        <div class="text-[11px] text-orange-600 dark:text-orange-400">+964 751 484 4125</div>
-                    </div>
-                    <i class="fas fa-arrow-left mr-auto text-orange-400 text-sm"></i>
-                </a>
+                <a href="https://wa.me/9647514844125" target="_blank" class="contact-btn bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700/40 hover:bg-green-100"><div class="w-10 h-10 rounded-xl bg-green-500 text-white flex items-center justify-center text-lg shadow"><i class="fab fa-whatsapp"></i></div><div><div class="text-sm font-bold">واتساب</div><div class="text-[11px] text-green-600 dark:text-green-400">+964 751 484 4125</div></div><i class="fas fa-arrow-left mr-auto text-green-400 text-sm"></i></a>
+                <a href="viber://chat?number=9647514844125" class="contact-btn bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700/40 hover:bg-purple-100"><div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center text-lg shadow"><i class="fab fa-viber"></i></div><div><div class="text-sm font-bold">فايبر</div><div class="text-[11px] text-purple-600 dark:text-purple-400">+964 751 484 4125</div></div><i class="fas fa-arrow-left mr-auto text-purple-400 text-sm"></i></a>
+                <a href="tel:+9647514844125" class="contact-btn bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-700/40 hover:bg-orange-100"><div class="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center text-lg shadow"><i class="fas fa-phone"></i></div><div><div class="text-sm font-bold">كورك — مكالمة</div><div class="text-[11px] text-orange-600 dark:text-orange-400">+964 751 484 4125</div></div><i class="fas fa-arrow-left mr-auto text-orange-400 text-sm"></i></a>
             </div>
         </div>
     </section>
 
     <section id="used" class="w-full mb-8 stagger-5">
-        <div class="flex items-center gap-3 mb-4">
-            <div class="w-1 h-8 bg-amber-500 rounded-full"></div>
-            <div>
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">قسم الأثاث المستعمل</h2>
-                <p class="text-[11px] text-gray-500 dark:text-gray-400">بەشا ڕووکارێن بهراندî — بحالة ممتازة</p>
-            </div>
-        </div>
+        <div class="flex items-center gap-3 mb-4"><div class="w-1 h-8 bg-amber-500 rounded-full"></div><div><h2 class="text-xl font-bold text-gray-900 dark:text-white">قسم الأثاث المستعمل</h2><p class="text-[11px] text-gray-500 dark:text-gray-400">بەشا ڕووکارێن بهراندî — بحالة ممتازة</p></div></div>
         <div class="glass-panel rounded-3xl p-5">
-            <p class="text-sm text-gray-700 dark:text-gray-300 mb-1 font-medium">هل تريد بيع أثاثك المستعمل؟ تواصل معنا الآن</p>
-            <p class="text-[11px] text-gray-500 dark:text-gray-400 mb-4">ئایا ئۇ ڕووکارێت بهراندî دبەیت بفروشی؟ نووکە پەیوەندیێ بکەن</p>
-
             <button onclick="toggleDropdown('usedList')" class="w-full flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-xl font-bold text-gray-800 dark:text-white transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 shadow-sm mb-2">
                 <div class="flex items-center gap-2"><i class="fas fa-recycle text-amber-500"></i> طرق التواصل المتوفرة</div>
                 <i class="fas fa-chevron-down transition-transform duration-300" id="usedList-icon"></i>
             </button>
-
             <div id="usedList" class="hidden flex-col gap-3 mt-2 animate-fadeIn">
-                <a href="https://wa.me/9647515406256" target="_blank" class="contact-btn bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700/40 hover:bg-green-100">
-                    <div class="w-10 h-10 rounded-xl bg-green-500 text-white flex items-center justify-center text-lg shadow"><i class="fab fa-whatsapp"></i></div>
-                    <div><div class="text-sm font-bold">واتساب</div><div class="text-[11px] text-green-600 dark:text-green-400">+964 751 540 6256</div></div>
-                    <i class="fas fa-arrow-left mr-auto text-green-400 text-sm"></i>
-                </a>
-                <a href="viber://chat?number=9647515406256" class="contact-btn bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700/40">
-                    <div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center text-lg shadow"><i class="fab fa-viber"></i></div>
-                    <div><div class="text-sm font-bold">فايبر</div><div class="text-[11px] text-purple-600 dark:text-purple-400">+964 751 540 6256</div></div>
-                    <i class="fas fa-arrow-left mr-auto text-purple-400 text-sm"></i>
-                </a>
-                <a href="tel:+9647515406256" class="contact-btn bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-700/40">
-                    <div class="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center text-lg shadow"><i class="fas fa-phone"></i></div>
-                    <div><div class="text-sm font-bold">كورك — مكالمة</div><div class="text-[11px] text-orange-600 dark:text-orange-400">+964 751 540 6256</div></div>
-                    <i class="fas fa-arrow-left mr-auto text-orange-400 text-sm"></i>
-                </a>
+                <a href="https://wa.me/9647515406256" target="_blank" class="contact-btn bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700/40 hover:bg-green-100"><div class="w-10 h-10 rounded-xl bg-green-500 text-white flex items-center justify-center text-lg shadow"><i class="fab fa-whatsapp"></i></div><div><div class="text-sm font-bold">واتساب</div><div class="text-[11px] text-green-600 dark:text-green-400">+964 751 540 6256</div></div><i class="fas fa-arrow-left mr-auto text-green-400 text-sm"></i></a>
+                <a href="viber://chat?number=9647515406256" class="contact-btn bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700/40"><div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center text-lg shadow"><i class="fab fa-viber"></i></div><div><div class="text-sm font-bold">فايبر</div><div class="text-[11px] text-purple-600 dark:text-purple-400">+964 751 540 6256</div></div><i class="fas fa-arrow-left mr-auto text-purple-400 text-sm"></i></a>
+                <a href="tel:+9647515406256" class="contact-btn bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-700/40"><div class="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center text-lg shadow"><i class="fas fa-phone"></i></div><div><div class="text-sm font-bold">كورك — مكالمة</div><div class="text-[11px] text-orange-600 dark:text-orange-400">+964 751 540 6256</div></div><i class="fas fa-arrow-left mr-auto text-orange-400 text-sm"></i></a>
             </div>
         </div>
     </section>
 
     <section id="branches" class="w-full mb-8 stagger-5">
-        <div class="flex items-center gap-3 mb-4">
-            <div class="w-1 h-8 bg-purple-500 rounded-full"></div>
-            <div>
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">فروعنا المعتمدة</h2>
-                <p class="text-[11px] text-gray-500 dark:text-gray-400">لقێن فرمی ی ئیڤان</p>
-            </div>
-        </div>
+        <div class="flex items-center gap-3 mb-4"><div class="w-1 h-8 bg-purple-500 rounded-full"></div><div><h2 class="text-xl font-bold text-gray-900 dark:text-white">فروعنا المعتمدة</h2><p class="text-[11px] text-gray-500 dark:text-gray-400">لقێن فرمی ی ئیڤان</p></div></div>
         <div class="flex flex-col gap-4">
             <div class="glass-panel rounded-2xl p-4 flex gap-4 items-start">
-                <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl shrink-0 shadow-inner">
-                    <i class="fas fa-map-marker-alt"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold text-gray-900 dark:text-white text-base">دهوك — زركا</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-1 leading-relaxed">مقابل سجن زركا، دهوك</p>
-                    <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1">دهوک، بەرامبەر زیندانا زرکا</p>
-                    <a href="https://maps.app.goo.gl/u6zP3XLVnA5xSKRGA?g_st=ac" target="_blank" class="inline-flex items-center gap-2 mt-2 text-purple-600 dark:text-purple-400 text-xs font-bold hover:underline">
-                        <i class="fas fa-directions"></i> عرض على الخريطة
-                    </a>
-                </div>
+                <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="fas fa-map-marker-alt"></i></div>
+                <div><h3 class="font-bold text-gray-900 dark:text-white text-base">دهوك — زركا</h3><p class="text-sm text-gray-600 dark:text-gray-300 mt-1">مقابل سجن زركا، دهوك</p><p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1">دهوک، بەرامبەر زیندانا زرکا</p></div>
             </div>
             <div class="glass-panel rounded-2xl p-4 flex gap-4 items-start">
-                <div class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl shrink-0 shadow-inner">
-                    <i class="fas fa-map-marker-alt"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold text-gray-900 dark:text-white text-base">زاخو</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-1 leading-relaxed">شارع المحكمة الجديدة، قرب ماركيت زاخو بازار</p>
-                    <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1">شارەع دادگاها نوپ، نزیک ماركيت زاخو بازار</p>
-                    <a href="https://wa.me/9647514412646" target="_blank" class="inline-flex items-center gap-2 mt-2 text-green-600 dark:text-green-400 text-xs font-bold hover:underline">
-                        <i class="fab fa-whatsapp"></i> واتساب فرع زاخو
-                    </a>
-                </div>
+                <div class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="fas fa-map-marker-alt"></i></div>
+                <div><h3 class="font-bold text-gray-900 dark:text-white text-base">زاخو</h3><p class="text-sm text-gray-600 dark:text-gray-300 mt-1">شارع المحكمة الجديدة، قرب ماركيت زاخو بازار</p><p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1">شارەع دادگاها نوپ، نزیک ماركيت زاخو بازار</p></div>
             </div>
         </div>
     </section>
 
     <section id="factories" class="w-full mb-8 stagger-6">
-        <div class="flex items-center gap-3 mb-4">
-            <div class="w-1 h-8 bg-gray-500 rounded-full"></div>
-            <div>
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">معامل معرض إيفان</h2>
-                <p class="text-[11px] text-gray-500 dark:text-gray-400">کارگەهێن ئیڤان — خلق الجودة من الصفر</p>
-            </div>
-        </div>
+        <div class="flex items-center gap-3 mb-4"><div class="w-1 h-8 bg-gray-500 rounded-full"></div><div><h2 class="text-xl font-bold text-gray-900 dark:text-white">معامل معرض إيفان</h2><p class="text-[11px] text-gray-500 dark:text-gray-400">کارگەهێن ئیڤان</p></div></div>
         <div class="flex flex-col gap-4">
-            <div class="glass-panel rounded-2xl p-4 flex gap-4 items-start">
-                <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 flex items-center justify-center text-xl shrink-0 shadow-inner">
-                    <i class="fas fa-tree"></i>
-                </div>
-                <div class="flex-1">
-                    <h3 class="font-bold text-gray-900 dark:text-white text-base">معمل الأخشاب</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-0.5">قناصير، ميز، تواليت، تخوت</p>
-                    <p class="text-[11px] text-gray-400 mt-1">کارگەها darî — kanasêr, mêz, toalet, texet</p>
-                    <a href="https://wa.me/9647500524236" target="_blank" class="inline-flex items-center gap-2 mt-2 text-green-600 dark:text-green-400 text-xs font-bold">
-                        <i class="fab fa-whatsapp"></i> +964 750 052 4236
-                    </a>
-                </div>
-            </div>
-            <div class="glass-panel rounded-2xl p-4 flex gap-4 items-start">
-                <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0 shadow-inner">
-                    <i class="fas fa-couch"></i>
-                </div>
-                <div class="flex-1">
-                    <h3 class="font-bold text-gray-900 dark:text-white text-base">معمل الدواوين والقنفات</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-0.5">تصنيع دواوين وقنفات إيفان الفاخرة</p>
-                    <p class="text-[11px] text-gray-400 mt-1">کارگەها kanafet û dîwanan ên ئیڤان</p>
-                    <a href="https://wa.me/9647514412646" target="_blank" class="inline-flex items-center gap-2 mt-2 text-green-600 dark:text-green-400 text-xs font-bold">
-                        <i class="fab fa-whatsapp"></i> +964 751 441 2646
-                    </a>
-                </div>
-            </div>
-            <div class="glass-panel rounded-2xl p-4 flex gap-4 items-start">
-                <div class="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 flex items-center justify-center text-xl shrink-0 shadow-inner">
-                    <i class="fas fa-layer-group"></i>
-                </div>
-                <div class="flex-1">
-                    <h3 class="font-bold text-gray-900 dark:text-white text-base">معمل الألمنيوم</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-0.5">تصنيع قطع الألمنيوم عالية الجودة</p>
-                    <p class="text-[11px] text-gray-400 mt-1">کارگەها aluminium ên ئیڤان</p>
-                    <a href="https://wa.me/9647517122765" target="_blank" class="inline-flex items-center gap-2 mt-2 text-green-600 dark:text-green-400 text-xs font-bold">
-                        <i class="fab fa-whatsapp"></i> +964 751 712 2765
-                    </a>
-                </div>
-            </div>
+            <div class="glass-panel rounded-2xl p-4 flex gap-4 items-start"><div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="fas fa-tree"></i></div><div class="flex-1"><h3 class="font-bold text-gray-900 dark:text-white text-base">معمل الأخشاب</h3><p class="text-[11px] text-gray-400 mt-1">کارگەها darî</p><a href="https://wa.me/9647500524236" target="_blank" class="inline-flex items-center gap-2 mt-2 text-green-600 dark:text-green-400 text-xs font-bold"><i class="fab fa-whatsapp"></i> +964 750 052 4236</a></div></div>
+            <div class="glass-panel rounded-2xl p-4 flex gap-4 items-start"><div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="fas fa-couch"></i></div><div class="flex-1"><h3 class="font-bold text-gray-900 dark:text-white text-base">معمل الدواوين والقنفات</h3><p class="text-[11px] text-gray-400 mt-1">کارگەها kanafet</p><a href="https://wa.me/9647514412646" target="_blank" class="inline-flex items-center gap-2 mt-2 text-green-600 dark:text-green-400 text-xs font-bold"><i class="fab fa-whatsapp"></i> +964 751 441 2646</a></div></div>
+            <div class="glass-panel rounded-2xl p-4 flex gap-4 items-start"><div class="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="fas fa-layer-group"></i></div><div class="flex-1"><h3 class="font-bold text-gray-900 dark:text-white text-base">معمل الألمنيوم</h3><p class="text-[11px] text-gray-400 mt-1">کارگەها aluminium</p><a href="https://wa.me/9647517122765" target="_blank" class="inline-flex items-center gap-2 mt-2 text-green-600 dark:text-green-400 text-xs font-bold"><i class="fab fa-whatsapp"></i> +964 751 712 2765</a></div></div>
         </div>
     </section>
 
     <section id="about" class="w-full mb-8 stagger-6">
-        <div class="flex items-center gap-3 mb-4">
-            <div class="w-1 h-8 bg-cyan-500 rounded-full"></div>
-            <div>
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">قصتنا وهدفنا</h2>
-                <p class="text-[11px] text-gray-500 dark:text-gray-400">çîroka me û armanca me</p>
-            </div>
-        </div>
+        <div class="flex items-center gap-3 mb-4"><div class="w-1 h-8 bg-cyan-500 rounded-full"></div><div><h2 class="text-xl font-bold text-gray-900 dark:text-white">قصتنا وهدفنا</h2><p class="text-[11px] text-gray-500 dark:text-gray-400">çîroka me û armanca me</p></div></div>
         <div class="glass-panel rounded-3xl p-6 flex flex-col gap-5">
-            <div>
-                <div class="flex items-center gap-2 mb-2">
-                    <i class="fas fa-users text-ivan-red"></i>
-                    <h3 class="font-bold text-gray-900 dark:text-white">من نحن</h3>
-                </div>
-                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                    نحن في معرض إيفان عائلة كبيرة تضم حوالي 50 موظفاً وعاملاً يعملون بجهد وشغف دائم، موزعين بتنظيم عالٍ على 7 طوابق متكاملة. هدفنا الأول والأخير هو تقديم خدمة عملاء ممتازة تليق بضيوفنا.
-                </p>
-                <p class="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed mt-2">em li pêşangeha Ivan malbateke mezin a bi 50 karmend in ku bi hevkarî û dildarî xebitîn.</p>
-            </div>
+            <div><div class="flex items-center gap-2 mb-2"><i class="fas fa-users text-ivan-red"></i><h3 class="font-bold text-gray-900 dark:text-white">من نحن</h3></div><p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">نحن في معرض إيفان عائلة كبيرة تضم حوالي 50 موظفاً وعاملاً يعملون بجهد وشغف دائم، موزعين بتنظيم عالٍ على 7 طوابق متكاملة.</p></div>
             <div class="h-px bg-gray-200 dark:bg-gray-700/50"></div>
-            <div>
-                <div class="flex items-center gap-2 mb-2">
-                    <i class="fas fa-building text-cyan-500"></i>
-                    <h3 class="font-bold text-gray-900 dark:text-white">نبذة عنا</h3>
-                </div>
-                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                    تأسس معرض إيفان في عام 2017 ونفخر اليوم بكوننا مؤسسة متكاملة تضم 7 طوابق للعرض، ويدعمها 3 معامل إنتاجية تابعة لنا. كما نتوسع جغرافياً عبر قسمنا الخاص في مدينة زاخو لخدمة عملائنا بشكل أوسع.
-                </p>
-                <p class="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed mt-2">Pêşangeha Ivan di sala 2017'an de hate damezrandin û xwedan 7 qat û 3 kargehê ye.</p>
-            </div>
-            <div class="h-px bg-gray-200 dark:bg-gray-700/50"></div>
-            <div>
-                <div class="flex items-center gap-2 mb-2">
-                    <i class="fas fa-eye text-purple-500"></i>
-                    <h3 class="font-bold text-gray-900 dark:text-white">رؤيتنا وأهدافنا</h3>
-                </div>
-                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                    نهدف إلى تقديم خدمات تضاهي الجودة العالمية، ونسعى لأن تكون بصمة "إيفان" موجودة في كل منزل من خلال توفير الراحة والأناقة.
-                </p>
-                <p class="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed mt-2">Armanca me peşkêşkirina xizmetên kalîteya cîhanî ye û bibe xwedan cihê xwe di her malekê de.</p>
-            </div>
-            <div class="h-px bg-gray-200 dark:bg-gray-700/50"></div>
-            <div>
-                <div class="flex items-center gap-2 mb-2">
-                    <i class="fas fa-heart text-red-500"></i>
-                    <h3 class="font-bold text-gray-900 dark:text-white">قيمنا الأساسية</h3>
-                </div>
-                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                    الوضوح والشفافية مع العملاء، فالهدف هو إرضاء وخدمة العميل وليس الاستفادة والربح المادي فقط. الأمانة، الجودة، والعمل بروح الفريق الواحد.
-                </p>
-                <p class="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed mt-2">Eşkereyî û şefafî digel muşteriyên, dilsozî, kalîte û xebata komê.</p>
-            </div>
+            <div><div class="flex items-center gap-2 mb-2"><i class="fas fa-eye text-purple-500"></i><h3 class="font-bold text-gray-900 dark:text-white">رؤيتنا وأهدافنا</h3></div><p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">نهدف إلى تقديم خدمات تضاهي الجودة العالمية، ونسعى لأن تكون بصمة "إيفان" موجودة في كل منزل من خلال توفير الراحة والأناقة.</p></div>
         </div>
     </section>
 
     <section id="hours" class="w-full mb-8">
         <div class="glass-panel rounded-3xl p-6 flex gap-4 items-start">
-            <div class="w-12 h-12 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 flex items-center justify-center text-xl shrink-0 shadow-inner">
-                <i class="far fa-clock"></i>
-            </div>
-            <div>
-                <h3 class="font-bold text-gray-900 dark:text-white mb-1">أوقات الدوام</h3>
-                <div class="inline-block bg-white/60 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 mb-2">
-                    <p class="text-lg font-bold font-outfit text-gray-900 dark:text-white tracking-wider">10:00 AM — 8:30 PM</p>
-                </div>
-                <p class="text-sm text-gray-700 dark:text-gray-300"><i class="fas fa-calendar-times text-ivan-red ml-1"></i> يوم الجمعة عطلة رسمية</p>
-                <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1">ژ 10 سپێدێ تا 8:30 ئێڤارێ — ڕۆژا ئەینی بێهنڤەدانە</p>
-            </div>
+            <div class="w-12 h-12 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="far fa-clock"></i></div>
+            <div><h3 class="font-bold text-gray-900 dark:text-white mb-1">أوقات الدوام</h3><div class="inline-block bg-white/60 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 mb-2"><p class="text-lg font-bold font-outfit text-gray-900 dark:text-white tracking-wider">10:00 AM — 8:30 PM</p></div><p class="text-sm text-gray-700 dark:text-gray-300"><i class="fas fa-calendar-times text-ivan-red ml-1"></i> يوم الجمعة عطلة رسمية</p></div>
         </div>
     </section>
 
@@ -581,76 +333,39 @@
         <h3 class="font-bold text-gray-800 dark:text-white mb-1 text-lg">تابعنا على منصاتنا</h3>
         <p class="text-[11px] text-gray-500 dark:text-gray-400 mb-5">مە ب سۆشیاڵ میدیایێ ب شۆپینن</p>
         <div class="flex items-center justify-center gap-4 flex-wrap">
-            <a href="https://www.instagram.com/ma3rd_ivan1?igsh=dDF4Y2dnYXZ5eGZ3" target="_blank" class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white flex items-center justify-center text-2xl shadow-lg hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
-                <i class="fab fa-instagram"></i></a>
-            <a href="https://www.tiktok.com/@ma3rdivan1" target="_blank" class="w-14 h-14 rounded-2xl bg-black text-white flex items-center justify-center text-2xl shadow-lg hover:-translate-y-2 hover:shadow-xl transition-all duration-300 border border-gray-700">
-                <i class="fab fa-tiktok"></i></a>
-            <a href="https://www.facebook.com/share/1BLDRvJGzr/" target="_blank" class="w-14 h-14 rounded-2xl bg-[#1877F2] text-white flex items-center justify-center text-2xl shadow-lg hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
-                <i class="fab fa-facebook-f"></i></a>
-            <a href="https://www.snapchat.com/add/ivan2012i?src=QR_CODE" target="_blank" class="w-14 h-14 rounded-2xl bg-yellow-400 text-black flex items-center justify-center text-2xl shadow-lg hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
-                <i class="fab fa-snapchat-ghost"></i></a>
+            <a href="https://www.instagram.com/ma3rd_ivan1?igsh=dDF4Y2dnYXZ5eGZ3" target="_blank" class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white flex items-center justify-center text-2xl shadow-lg hover:-translate-y-2 hover:shadow-xl transition-all duration-300"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@ma3rdivan1" target="_blank" class="w-14 h-14 rounded-2xl bg-black text-white flex items-center justify-center text-2xl shadow-lg hover:-translate-y-2 hover:shadow-xl transition-all duration-300 border border-gray-700"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.facebook.com/share/1BLDRvJGzr/" target="_blank" class="w-14 h-14 rounded-2xl bg-[#1877F2] text-white flex items-center justify-center text-2xl shadow-lg hover:-translate-y-2 hover:shadow-xl transition-all duration-300"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.snapchat.com/add/ivan2012i?src=QR_CODE" target="_blank" class="w-14 h-14 rounded-2xl bg-yellow-400 text-black flex items-center justify-center text-2xl shadow-lg hover:-translate-y-2 hover:shadow-xl transition-all duration-300"><i class="fab fa-snapchat-ghost"></i></a>
         </div>
     </div>
 
     <footer class="text-center w-full mt-auto">
         <div class="glass-panel rounded-2xl py-4 px-6 inline-block shadow-sm text-center">
-            <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                جميع الحقوق محفوظة © <span class="font-outfit font-bold">2026</span> معرض إيفان
-            </p>
-            <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-1 font-outfit">
-                Copyright © 2026 Ivan Showroom — All Rights Reserved
-            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">جميع الحقوق محفوظة © <span class="font-outfit font-bold">2026</span> معرض إيفان</p>
+            <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-1 font-outfit">Copyright © 2026 Ivan Showroom — All Rights Reserved</p>
         </div>
     </footer>
 
 </main>
 
 <script>
-    // Theme Toggle
     const themeToggleBtn = document.getElementById('themeToggle');
     const html = document.documentElement;
-    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        html.classList.add('dark');
-    }
-    themeToggleBtn.addEventListener('click', () => {
-        html.classList.toggle('dark');
-        localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
-    });
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { html.classList.add('dark'); }
+    themeToggleBtn.addEventListener('click', () => { html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
 
-    // Sidebar
-    function openSidebar() {
-        document.getElementById('sidebar').classList.add('open');
-        document.getElementById('sidebarOverlay').classList.add('visible');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeSidebar() {
-        document.getElementById('sidebar').classList.remove('open');
-        document.getElementById('sidebarOverlay').classList.remove('visible');
-        document.body.style.overflow = '';
-    }
-    window.openSidebar = openSidebar;
-    window.closeSidebar = closeSidebar;
+    function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('visible'); document.body.style.overflow = 'hidden'; }
+    function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('visible'); document.body.style.overflow = ''; }
+    window.openSidebar = openSidebar; window.closeSidebar = closeSidebar;
 
-    // Scroll helper
-    function scrollToSection(id) {
-        const el = document.querySelector(id);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    function scrollToSection(id) { const el = document.querySelector(id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     window.scrollToSection = scrollToSection;
 
-    // Dropdown Toggles
     function toggleDropdown(id) {
-        const el = document.getElementById(id);
-        const icon = document.getElementById(id + '-icon');
-        if (el.classList.contains('hidden')) {
-            el.classList.remove('hidden');
-            el.classList.add('flex');
-            if(icon) icon.classList.add('rotate-180');
-        } else {
-            el.classList.add('hidden');
-            el.classList.remove('flex');
-            if(icon) icon.classList.remove('rotate-180');
-        }
+        const el = document.getElementById(id); const icon = document.getElementById(id + '-icon');
+        if (el.classList.contains('hidden')) { el.classList.remove('hidden'); el.classList.add('flex'); if(icon) icon.classList.add('rotate-180'); } 
+        else { el.classList.add('hidden'); el.classList.remove('flex'); if(icon) icon.classList.remove('rotate-180'); }
     }
     window.toggleDropdown = toggleDropdown;
 </script>
