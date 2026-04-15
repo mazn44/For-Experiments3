@@ -3,204 +3,582 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التسوق والعروض | إيفان</title>
+    <title>التسوق والعروض الحصرية | إيفان</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <script>
         tailwind.config = {
             darkMode: 'class',
-            theme: { extend: { fontFamily: { tajawal: ['Tajawal', 'sans-serif'] }, colors: { ivan: { red: '#B11216' } } } }
+            theme: {
+                extend: {
+                    fontFamily: {
+                        tajawal: ['Tajawal', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        ivan: { red: '#B11216', dark: '#1A1A1A', gold: '#D4AF37' }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'fadeIn': 'fadeIn 0.5s ease forwards',
+                        'slideUp': 'slideUp 0.4s cubic-bezier(0.4,0,0.2,1) forwards',
+                    },
+                    keyframes: {
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+                        fadeIn: { from: { opacity: '0' }, to: { opacity: '1' } },
+                        slideUp: { from: { opacity: '0', transform: 'translateY(20px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+                    }
+                }
+            }
         }
     </script>
+
     <style>
-        .glass-panel { background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 8px 32px rgba(0,0,0,0.06); }
-        .dark .glass-panel { background: rgba(20,20,28,0.85); border: 1px solid rgba(255,255,255,0.05); }
+        .glass-panel {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+        .dark .glass-panel {
+            background: rgba(20,20,28,0.85);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
         .bg-gradient-custom { background: linear-gradient(135deg, #f0f4f8 0%, #dce6f0 100%); }
-        .dark .bg-gradient-custom { background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); }
-        #adminModal, #loginModal { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; }
-        .modal-box { background: white; border-radius: 24px; padding: 32px; max-width: 480px; width: 94%; }
-        .dark .modal-box { background: #1a1a24; color: white; }
+        .dark .bg-gradient-custom { background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%); }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #B11216; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 500;
+            background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: all 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-box {
+            background: white; border-radius: 28px; padding: 32px; width: 94%; max-width: 500px;
+            transform: translateY(20px) scale(0.95); transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.3); max-h: 90vh; overflow-y: auto;
+        }
+        .dark .modal-box { background: #1a1a24; color: white; border: 1px solid rgba(255,255,255,0.1); }
+        .modal-overlay.active .modal-box { transform: translateY(0) scale(1); }
+
+        /* Product Card */
+        .product-card {
+            border-radius: 24px; overflow: hidden; transition: all 0.3s ease;
+            display: flex; flex-direction: column; height: 100%;
+        }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .product-media { width: 100%; height: 280px; object-fit: cover; background: #e2e8f0; }
+        .dark .product-media { background: #2d3748; }
+        
+        /* Toast Notification */
+        #toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #10B981; color: white; padding: 12px 24px; border-radius: 50px;
+            font-weight: bold; font-size: 14px; z-index: 1000; box-shadow: 0 10px 30px rgba(16,185,129,0.4);
+            transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); display: flex; align-items: center; gap: 10px;
+        }
+        #toast.show { transform: translateX(-50%) translateY(0); }
+        #toast.error { background: #EF4444; box-shadow: 0 10px 30px rgba(239,68,68,0.4); }
     </style>
 </head>
-<body class="bg-gradient-custom text-gray-800 dark:text-gray-100 font-tajawal min-h-screen pb-16">
 
-<div class="fixed top-0 left-0 right-0 z-50 p-4 glass-panel flex items-center justify-between rounded-b-3xl">
-    <a href="index.html" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 transition-colors">
-        <i class="fas fa-arrow-right"></i>
-    </a>
-    <h1 class="font-bold text-lg text-ivan-red dark:text-white">التسوق والعروض</h1>
-    <button onclick="handleAdminClick()" class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-900/20 text-ivan-red flex items-center justify-center">
-        <i class="fas fa-lock"></i>
-    </button>
+<body class="bg-gradient-custom text-gray-800 dark:text-gray-100 font-tajawal transition-colors duration-500 min-h-screen">
+
+<div class="fixed top-0 right-0 w-96 h-96 bg-ivan-red rounded-full mix-blend-multiply filter blur-[150px] opacity-10 dark:opacity-20 animate-float pointer-events-none"></div>
+<div class="fixed bottom-0 left-0 w-96 h-96 bg-blue-400 dark:bg-ivan-gold rounded-full mix-blend-multiply filter blur-[150px] opacity-10 dark:opacity-10 animate-float pointer-events-none" style="animation-delay:2s"></div>
+
+<div class="fixed top-0 left-0 right-0 z-50 p-4">
+    <div class="glass-panel rounded-full px-5 py-3 flex items-center justify-between max-w-5xl mx-auto">
+        <a href="index.html" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200 shadow-sm">
+            <i class="fas fa-arrow-right"></i>
+        </a>
+        
+        <div class="text-center flex-1">
+            <h1 class="font-bold text-lg text-gray-900 dark:text-white tracking-wide">التسوق والعروض</h1>
+            <p class="text-[10px] text-gray-500 dark:text-gray-400">پێشكەشكاریێن تایبەت</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button id="themeToggle" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center transition-colors text-gray-700 dark:text-yellow-400 shadow-sm">
+                <i class="fas fa-moon dark:hidden"></i>
+                <i class="fas fa-sun hidden dark:block"></i>
+            </button>
+            <button onclick="handleAdminClick()" class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-900/20 text-ivan-red flex items-center justify-center transition-colors shadow-sm">
+                <i class="fas fa-lock text-sm"></i>
+            </button>
+        </div>
+    </div>
 </div>
 
-<main class="max-w-md mx-auto px-4 pt-24">
-    <div id="offersGrid" class="grid grid-cols-1 gap-5">
-        <div class="text-center py-20 text-gray-400" id="offersEmpty">
-            <i class="fas fa-spinner fa-spin text-4xl mb-3"></i>
-            <p>جارٍ تحميل العروض من السحابة...</p>
-            <p class="text-xs mt-2 text-red-400 hidden" id="rulesError">إذا استمر التحميل طويلاً، يرجى تفعيل قواعد Firebase (شرحتها لك).</p>
+<main class="relative z-10 max-w-5xl mx-auto px-4 pt-28 pb-20 min-h-screen flex flex-col">
+    
+    <div class="mb-8 text-center animate-slideUp">
+        <span class="px-4 py-1.5 rounded-full bg-ivan-red/10 text-ivan-red dark:text-red-400 text-xs font-bold mb-3 inline-block">تحديثات حصرية</span>
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">تصفح أحدث عروضنا</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400">جميع القطع المميزة والخصومات الحصرية من معرض إيفان تجدها هنا.</p>
+    </div>
+
+    <div id="offersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full animate-slideUp" style="animation-delay: 0.1s;">
+        
+        <div class="col-span-full text-center py-24" id="loadingState">
+            <div class="inline-block relative w-20 h-20 mb-4">
+                <div class="absolute inset-0 border-4 border-gray-200 dark:border-gray-700 rounded-full"></div>
+                <div class="absolute inset-0 border-4 border-ivan-red rounded-full border-t-transparent animate-spin"></div>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">جارٍ تحميل المنتجات...</h3>
+            <p class="text-sm text-gray-500 mt-1">يرجى الانتظار قليلاً</p>
+            <div id="rulesErrorHint" class="hidden mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl max-w-md mx-auto">
+                <p class="text-xs text-red-600 dark:text-red-400 font-bold"><i class="fas fa-exclamation-triangle"></i> تنبيه للإدارة:</p>
+                <p class="text-[11px] text-red-500 mt-1">إذا استمر التحميل، يرجى الدخول إلى موقع Firebase وتعديل القواعد (Rules) في Firestore و Storage وجعلها <code>allow read, write: if true;</code></p>
+            </div>
         </div>
+
     </div>
 </main>
 
-<div id="loginModal" class="hidden">
-    <div class="modal-box">
-        <h3 class="text-lg font-bold text-center mb-4">لوحة إدارة المنتجات</h3>
-        <input type="password" id="adminPass" placeholder="كلمة المرور" class="w-full border rounded-xl px-4 py-3 text-black mb-3 focus:outline-none focus:ring-2 focus:ring-ivan-red">
-        <div class="flex gap-3">
-            <button onclick="checkPass()" class="flex-1 py-3 bg-ivan-red text-white rounded-xl font-bold">دخول</button>
-            <button onclick="document.getElementById('loginModal').classList.add('hidden')" class="flex-1 py-3 bg-gray-200 text-gray-800 rounded-xl font-bold">إلغاء</button>
+<div id="loginModal" class="modal-overlay">
+    <div class="modal-box relative">
+        <button onclick="closeModal('loginModal')" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:text-red-500"><i class="fas fa-times"></i></button>
+        
+        <div class="text-center mb-6">
+            <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-ivan-red to-red-900 flex items-center justify-center text-white text-3xl mx-auto mb-4 shadow-lg shadow-red-500/30">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">نظام الإدارة الآمن</h3>
+            <p class="text-sm text-gray-500 mt-2">يرجى إدخال كلمة المرور للوصول إلى لوحة التحكم بالمنتجات.</p>
         </div>
-        <p id="errTxt" class="text-red-500 text-sm text-center mt-3 hidden">كلمة مرور خاطئة</p>
+        
+        <div class="relative mb-4">
+            <i class="fas fa-key absolute right-4 top-4 text-gray-400"></i>
+            <input type="password" id="adminPasswordInput" placeholder="كلمة المرور"
+                   class="w-full border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-2xl pr-12 pl-4 py-3.5 text-base text-gray-800 dark:text-white focus:outline-none focus:border-ivan-red transition-colors"
+                   onkeydown="if(event.key==='Enter') verifyAdminPassword()">
+        </div>
+        
+        <button onclick="verifyAdminPassword()" class="w-full py-3.5 bg-ivan-red hover:bg-red-700 text-white rounded-2xl font-bold text-lg transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
+            تسجيل الدخول <i class="fas fa-sign-in-alt mr-2"></i>
+        </button>
+        
+        <p id="loginErrorMsg" class="text-red-500 text-sm font-bold text-center mt-4 hidden animate-pulse">
+            <i class="fas fa-times-circle"></i> كلمة المرور غير صحيحة، حاول مجدداً.
+        </p>
     </div>
 </div>
 
-<div id="adminModal" class="hidden">
-    <div class="modal-box max-h-[90vh] overflow-y-auto">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="font-bold">إضافة عرض جديد</h3>
-            <button onclick="document.getElementById('adminModal').classList.add('hidden')"><i class="fas fa-times"></i></button>
+<div id="adminModal" class="modal-overlay">
+    <div class="modal-box relative !max-w-2xl">
+        <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-4 mb-5">
+            <div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <i class="fas fa-cog text-ivan-red"></i> إدارة المنتجات والعروض
+                </h3>
+                <p class="text-xs text-gray-500 mt-1">إضافة، تعديل، وحذف المعروضات في السحابة</p>
+            </div>
+            <button onclick="closeModal('adminModal')" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:text-red-500 transition-colors"><i class="fas fa-times text-lg"></i></button>
         </div>
-        <div class="flex flex-col gap-3 mb-6">
-            <input type="text" id="oTitle" placeholder="اسم المنتج/العرض" class="w-full border rounded-xl px-4 py-2 text-black">
-            <textarea id="oDesc" placeholder="تفاصيل والسعر" rows="2" class="w-full border rounded-xl px-4 py-2 text-black"></textarea>
-            <input type="file" id="oFile" accept="image/*,video/*" class="w-full text-sm">
-            <button onclick="uploadOffer()" id="upBtn" class="w-full py-3 bg-ivan-red text-white rounded-xl font-bold">رفع المنتج للسحابة</button>
-            <p id="upStatus" class="text-center text-sm font-bold text-ivan-red hidden">جارٍ الرفع...</p>
+
+        <div class="bg-gray-50 dark:bg-gray-800/50 rounded-3xl p-6 mb-6 border border-gray-100 dark:border-gray-700">
+            <h4 class="font-bold text-gray-800 dark:text-white mb-4 text-sm"><i class="fas fa-plus-circle text-green-500 ml-1"></i> إضافة منتج جديد</h4>
+            
+            <div class="flex flex-col gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1">اسم أو عنوان المنتج *</label>
+                    <input type="text" id="offerTitle" placeholder="مثال: طقم كنب فاخر 7 مقاعد" class="w-full border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-xl px-4 py-3 text-sm focus:border-ivan-red focus:outline-none dark:text-white">
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1">وصف وتفاصيل السعر</label>
+                    <textarea id="offerDesc" placeholder="اكتب تفاصيل الموديل، الألوان المتوفرة، والسعر..." rows="3" class="w-full border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-xl px-4 py-3 text-sm focus:border-ivan-red focus:outline-none resize-none dark:text-white"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1">إرفاق صورة أو فيديو *</label>
+                    <div class="relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 text-center hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer" onclick="document.getElementById('offerFile').click()">
+                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                        <p class="text-sm font-bold text-gray-600 dark:text-gray-300" id="fileNameDisplay">اضغط لاختيار ملف</p>
+                        <p class="text-[10px] text-gray-400 mt-1">يدعم الصور (JPG, PNG) والفيديوهات (MP4)</p>
+                        <input type="file" id="offerFile" accept="image/*,video/*" class="hidden" onchange="document.getElementById('fileNameDisplay').innerText = this.files[0] ? this.files[0].name : 'اضغط لاختيار ملف'">
+                    </div>
+                </div>
+
+                <div id="uploadProgressContainer" class="hidden">
+                    <div class="flex justify-between text-xs font-bold mb-1 text-gray-600 dark:text-gray-300">
+                        <span>جاري الرفع للسحابة...</span>
+                        <span id="uploadPercentage">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
+                        <div id="uploadProgressBar" class="bg-gradient-to-r from-ivan-red to-red-500 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <button onclick="uploadNewOffer()" id="uploadBtn" class="w-full py-3.5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-xl font-bold text-sm transition-transform hover:-translate-y-1 shadow-lg mt-2">
+                    <i class="fas fa-check-circle mr-2"></i> حفظ ونشر المنتج
+                </button>
+            </div>
         </div>
-        <h3 class="font-bold mb-3 border-t pt-4">المنتجات الحالية (للحذف)</h3>
-        <div id="adminList" class="flex flex-col gap-2"><p class="text-sm text-gray-500">جاري التحميل...</p></div>
+
+        <h4 class="font-bold text-gray-800 dark:text-white mb-3 text-sm flex items-center justify-between">
+            <span><i class="fas fa-box-open text-blue-500 ml-1"></i> المنتجات المنشورة حالياً</span>
+            <span class="text-xs font-normal text-gray-500 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg" id="productsCount">0 منتج</span>
+        </h4>
+        
+        <div id="adminOffersList" class="flex flex-col gap-3 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-2 min-h-[150px] max-h-[300px] overflow-y-auto">
+            <div class="flex items-center justify-center h-full text-gray-400 text-sm py-10">
+                <i class="fas fa-spinner fa-spin mr-2"></i> جاري جلب البيانات...
+            </div>
+        </div>
     </div>
 </div>
+
+<div id="toast"><i class="fas fa-info-circle"></i> <span id="toastMsg">رسالة</span></div>
 
 <script type="module">
+    // Import Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
     import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
 
-    const cfg = {
+    // Firebase Configuration (Your Keys)
+    const firebaseConfig = {
         apiKey: "AIzaSyDuZsa00WSYbLD9zhGQKBQh6dS-5JHBZlw",
         authDomain: "customer-service-3-aa881.firebaseapp.com",
         projectId: "customer-service-3-aa881",
-        storageBucket: "customer-service-3-aa881.firebasestorage.app"
+        storageBucket: "customer-service-3-aa881.firebasestorage.app",
+        messagingSenderId: "773251933236",
+        appId: "1:773251933236:web:b2dfafc3051068a1ed1661",
+        measurementId: "G-89HYWNMFX5"
     };
 
-    const app = initializeApp(cfg);
+    // Initialize Services
+    const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const storage = getStorage(app);
-    const pass = "Ivan!_Mzn@2026_#$*";
-    const wa = "9647514844125";
 
-    // Show rules error hint if it takes more than 3 seconds
-    setTimeout(() => { const err = document.getElementById('rulesError'); if(err) err.classList.remove('hidden'); }, 3000);
+    // Constants
+    const ADMIN_PASSWORD = "Ivan!_Mzn@2026_#$*";
+    const WA_NUMBER = "9647514844125";
 
-    async function loadOffers() {
+    // Utility: Show Toast
+    function showToast(message, isError = false) {
+        const t = document.getElementById('toast');
+        const m = document.getElementById('toastMsg');
+        t.className = isError ? 'error show' : 'show';
+        m.innerText = message;
+        setTimeout(() => t.classList.remove('show'), 4000);
+    }
+    window.showToast = showToast;
+
+    // Show Rules Hint if loading takes more than 5 seconds
+    const rulesTimer = setTimeout(() => {
+        const hint = document.getElementById('rulesErrorHint');
+        if(hint) hint.classList.remove('hidden');
+    }, 5000);
+
+    // 1. Load Offers for Public View
+    async function loadPublicOffers() {
         const grid = document.getElementById('offersGrid');
         try {
             const q = query(collection(db, 'offers'), orderBy('createdAt', 'desc'));
             const snap = await getDocs(q);
-            if (snap.empty) { grid.innerHTML = '<p class="text-center py-10 text-gray-500">لا توجد منتجات حالياً.</p>'; return; }
+            
+            clearTimeout(rulesTimer); // Success, clear error hint
             grid.innerHTML = '';
-            snap.forEach(s => {
-                const d = s.data();
+
+            if (snap.empty) {
+                grid.innerHTML = `
+                <div class="col-span-full text-center py-20 text-gray-400 dark:text-gray-500 glass-panel rounded-3xl">
+                    <i class="fas fa-box-open text-5xl mb-4 opacity-50 block"></i>
+                    <h3 class="text-xl font-bold mb-1">لا توجد عروض حالياً</h3>
+                    <p class="text-sm">سيتم إضافة أحدث المنتجات قريباً، تابعنا باستمرار!</p>
+                </div>`;
+                return;
+            }
+
+            snap.forEach(docSnap => {
+                const data = docSnap.data();
+                const isVideo = data.mediaType === 'video' || (data.mediaUrl && data.mediaUrl.includes('video'));
+                
+                // Construct WhatsApp Link
+                const waMessage = encodeURIComponent(`مرحباً معرض إيفان، أود الاستفسار عن المنتج المعروض لديكم: (${data.title})`);
+                const waLink = `https://wa.me/${WA_NUMBER}?text=${waMessage}`;
+
+                const mediaHTML = isVideo 
+                    ? `<video src="${data.mediaUrl}" controls class="product-media"></video>`
+                    : `<img src="${data.mediaUrl}" alt="${data.title}" class="product-media" onerror="this.style.display='none'">`;
+
                 grid.innerHTML += `
-                <div class="glass-panel rounded-2xl overflow-hidden shadow-lg">
-                    ${d.mediaType === 'video' ? `<video src="${d.mediaUrl}" controls class="w-full h-56 object-cover"></video>` : `<img src="${d.mediaUrl}" class="w-full h-56 object-cover">`}
-                    <div class="p-4">
-                        <h3 class="font-bold text-lg mb-1">${d.title}</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">${d.desc}</p>
-                        <a href="https://wa.me/${wa}?text=مرحباً، أستفسر عن: ${d.title}" class="w-full flex justify-center gap-2 py-3 bg-green-500 text-white rounded-xl font-bold"><i class="fab fa-whatsapp text-lg"></i> اطلب الآن</a>
+                <div class="product-card glass-panel flex flex-col">
+                    ${mediaHTML}
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg text-gray-900 dark:text-white leading-tight">${data.title}</h3>
+                        </div>
+                        ${data.desc ? `<p class="text-sm text-gray-600 dark:text-gray-300 mb-5 leading-relaxed whitespace-pre-wrap flex-1">${data.desc}</p>` : '<div class="flex-1"></div>'}
+                        
+                        <div class="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/50">
+                            <a href="${waLink}" target="_blank" class="w-full py-3.5 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold text-sm transition-colors shadow-md flex items-center justify-center gap-2 group">
+                                <i class="fab fa-whatsapp text-xl group-hover:scale-110 transition-transform"></i> راسلنا عبر واتساب
+                            </a>
+                        </div>
                     </div>
                 </div>`;
             });
-        } catch(e) {
-            console.error(e);
-            grid.innerHTML = '<div class="text-center py-10 text-red-500"><i class="fas fa-exclamation-triangle text-3xl mb-2"></i><p>تعذر الاتصال بالسحابة.</p><p class="text-xs mt-1">يجب تفعيل قواعد Firebase (Rules).</p></div>';
+        } catch (error) {
+            console.error("Firestore Fetch Error:", error);
+            grid.innerHTML = `
+            <div class="col-span-full text-center py-20 bg-red-50 dark:bg-red-900/10 rounded-3xl border border-red-100 dark:border-red-900/30">
+                <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-3 block"></i>
+                <h3 class="text-lg font-bold text-red-700 dark:text-red-400">تعذر تحميل المنتجات</h3>
+                <p class="text-sm text-red-500 mt-2">يرجى التأكد من اتصالك بالإنترنت، أو تفعيل قواعد (Firebase Rules) إذا كنت الإدارة.</p>
+            </div>`;
         }
     }
 
-    async function loadAdminList() {
-        const list = document.getElementById('adminList');
+    // 2. Load Offers for Admin Panel (List format)
+    async function loadAdminProducts() {
+        const list = document.getElementById('adminOffersList');
+        const count = document.getElementById('productsCount');
+        list.innerHTML = '<div class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mb-2"></i><br>جاري جلب البيانات...</div>';
+        
         try {
             const q = query(collection(db, 'offers'), orderBy('createdAt', 'desc'));
             const snap = await getDocs(q);
+            
+            count.innerText = `${snap.size} منتج`;
+            
+            if (snap.empty) {
+                list.innerHTML = '<div class="text-center py-8 text-gray-400 text-sm">لا توجد منتجات مسجلة.</div>';
+                return;
+            }
+            
             list.innerHTML = '';
-            if (snap.empty) { list.innerHTML = '<p class="text-sm">لا يوجد شيء.</p>'; return; }
-            snap.forEach(s => {
-                const d = s.data();
-                list.innerHTML += `<div class="flex items-center justify-between p-2 bg-gray-100 rounded-lg"><span class="text-sm font-bold truncate">${d.title}</span><button onclick="window.delOffer('${s.id}', '${d.storagePath}')" class="text-red-500 px-2"><i class="fas fa-trash"></i></button></div>`;
+            snap.forEach(docSnap => {
+                const data = docSnap.data();
+                const icon = data.mediaType === 'video' ? '<i class="fas fa-video text-blue-500"></i>' : '<i class="fas fa-image text-green-500"></i>';
+                
+                list.innerHTML += `
+                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-transparent dark:border-gray-700">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <div class="w-10 h-10 rounded-lg bg-white dark:bg-gray-900 flex items-center justify-center shadow-sm shrink-0">${icon}</div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-bold text-gray-800 dark:text-white truncate">${data.title}</p>
+                            <p class="text-[10px] text-gray-500 truncate">${data.createdAt ? new Date(data.createdAt.toDate()).toLocaleDateString() : 'حديث'}</p>
+                        </div>
+                    </div>
+                    <button onclick="deleteProduct('${docSnap.id}', '${data.storagePath || ''}')" class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 text-red-500 flex items-center justify-center hover:bg-red-200 transition-colors shrink-0" title="حذف المنتج">
+                        <i class="fas fa-trash-alt text-xs"></i>
+                    </button>
+                </div>`;
             });
-        } catch(e) {}
-    }
-
-    window.uploadOffer = async () => {
-        const file = document.getElementById('oFile').files[0];
-        const title = document.getElementById('oTitle').value;
-        if(!file || !title) return alert('أدخل العنوان واختر ملف!');
-        
-        document.getElementById('upBtn').classList.add('hidden');
-        document.getElementById('upStatus').classList.remove('hidden');
-        
-        const sRef = ref(storage, `offers/${Date.now()}_${file.name}`);
-        const task = uploadBytesResumable(sRef, file);
-        
-        task.on('state_changed', null, (err) => {
-            alert('حدث خطأ بسبب حماية السحابة. تحقق من Rules.');
-            document.getElementById('upBtn').classList.remove('hidden');
-            document.getElementById('upStatus').classList.add('hidden');
-        }, async () => {
-            const url = await getDownloadURL(task.snapshot.ref);
-            await addDoc(collection(db, 'offers'), {
-                title, desc: document.getElementById('oDesc').value,
-                mediaUrl: url, mediaType: file.type.startsWith('video') ? 'video' : 'image',
-                storagePath: sRef.fullPath, createdAt: new Date()
-            });
-            alert('تم الرفع بنجاح!');
-            document.getElementById('upBtn').classList.remove('hidden');
-            document.getElementById('upStatus').classList.add('hidden');
-            loadOffers(); loadAdminList();
-        });
-    }
-
-    window.delOffer = async (id, path) => {
-        if(!confirm('حذف؟')) return;
-        await deleteDoc(doc(db, 'offers', id));
-        if(path) try { await deleteObject(ref(storage, path)); } catch(e){}
-        loadOffers(); loadAdminList();
-    }
-
-    window.checkPass = () => {
-        if(document.getElementById('adminPass').value === pass) {
-            document.getElementById('loginModal').classList.add('hidden');
-            document.getElementById('adminModal').classList.remove('hidden');
-            loadAdminList();
-        } else {
-            document.getElementById('errTxt').classList.remove('hidden');
+        } catch (error) {
+            list.innerHTML = '<div class="text-center py-8 text-red-500 text-sm">خطأ في جلب البيانات. تأكد من قواعد السحابة.</div>';
         }
     }
 
-    loadOffers();
+    // 3. Upload New Product
+    window.uploadNewOffer = async function() {
+        const titleInput = document.getElementById('offerTitle');
+        const descInput = document.getElementById('offerDesc');
+        const fileInput = document.getElementById('offerFile');
+        const btn = document.getElementById('uploadBtn');
+        const progContainer = document.getElementById('uploadProgressContainer');
+        const progBar = document.getElementById('uploadProgressBar');
+        const progText = document.getElementById('uploadPercentage');
+
+        const title = titleInput.value.trim();
+        const desc = descInput.value.trim();
+        const file = fileInput.files[0];
+
+        if (!title) return showToast('الرجاء كتابة اسم المنتج!', true);
+        if (!file) return showToast('الرجاء اختيار صورة أو فيديو!', true);
+
+        // UI State: Uploading
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> جاري الرفع للسحابة...';
+        btn.classList.add('opacity-70');
+        progContainer.classList.remove('hidden');
+
+        // Storage Ref
+        const isVideo = file.type.startsWith('video');
+        const fileExt = file.name.split('.').pop();
+        const safeName = `item_${Date.now()}.${fileExt}`;
+        const storageRef = ref(storage, `offers/${safeName}`);
+        
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                progBar.style.width = progress + '%';
+                progText.innerText = progress + '%';
+            },
+            (error) => {
+                console.error("Upload Error:", error);
+                showToast('حدث خطأ أثناء الرفع! تحقق من Rules السحابة.', true);
+                resetUploadUI();
+            },
+            async () => {
+                try {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    
+                    // Add to Firestore
+                    await addDoc(collection(db, 'offers'), {
+                        title: title,
+                        desc: desc,
+                        mediaUrl: downloadURL,
+                        mediaType: isVideo ? 'video' : 'image',
+                        storagePath: storageRef.fullPath,
+                        createdAt: new Date()
+                    });
+
+                    showToast('تم حفظ المنتج ونشره بنجاح!');
+                    
+                    // Clear form
+                    titleInput.value = '';
+                    descInput.value = '';
+                    fileInput.value = '';
+                    document.getElementById('fileNameDisplay').innerText = 'اضغط لاختيار ملف';
+                    
+                    resetUploadUI();
+                    loadPublicOffers();
+                    loadAdminProducts();
+
+                } catch (dbError) {
+                    console.error("Database Error:", dbError);
+                    showToast('تم الرفع ولكن فشل الحفظ في قاعدة البيانات!', true);
+                    resetUploadUI();
+                }
+            }
+        );
+
+        function resetUploadUI() {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check-circle mr-2"></i> حفظ ونشر المنتج';
+            btn.classList.remove('opacity-70');
+            progContainer.classList.add('hidden');
+            progBar.style.width = '0%';
+        }
+    };
+
+    // 4. Delete Product
+    window.deleteProduct = async function(docId, storagePath) {
+        if (!confirm('تحذير: هل أنت متأكد من حذف هذا المنتج نهائياً من السحابة؟')) return;
+        
+        try {
+            // Delete from Firestore
+            await deleteDoc(doc(db, 'offers', docId));
+            
+            // Try delete from Storage (don't break if file is missing)
+            if (storagePath) {
+                try {
+                    await deleteObject(ref(storage, storagePath));
+                } catch(storageErr) {
+                    console.warn("File already deleted or not found in storage", storageErr);
+                }
+            }
+            
+            showToast('تم حذف المنتج بنجاح');
+            loadPublicOffers();
+            loadAdminProducts();
+        } catch (error) {
+            console.error("Delete Error:", error);
+            showToast('حدث خطأ أثناء الحذف!', true);
+        }
+    };
+
+    // Execute on Load
+    loadPublicOffers();
+
+    // Export variables needed by normal JS
+    window._ADMIN_PWD = ADMIN_PASSWORD;
+    window._loadAdminProducts = loadAdminProducts;
 </script>
 
 <script>
-    // Theme setup
-    if(localStorage.getItem('theme')==='dark') document.documentElement.classList.add('dark');
-    
-    // 10 Clicks logic
-    let clicks = 0, timer;
-    window.handleAdminClick = () => {
-        clicks++;
-        clearTimeout(timer);
-        timer = setTimeout(() => clicks = 0, 2000);
-        if(clicks >= 10) {
-            clicks = 0;
-            document.getElementById('adminPass').value = '';
-            document.getElementById('errTxt').classList.add('hidden');
-            document.getElementById('loginModal').classList.remove('hidden');
+    // 1. Theme Configuration
+    const themeBtn = document.getElementById('themeToggle');
+    const htmlEl = document.documentElement;
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        htmlEl.classList.add('dark');
+    }
+    themeBtn.addEventListener('click', () => {
+        htmlEl.classList.toggle('dark');
+        localStorage.setItem('theme', htmlEl.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    // 2. Modals Control
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        if(id === 'loginModal') {
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('loginErrorMsg').classList.add('hidden');
+            setTimeout(() => document.getElementById('adminPasswordInput').focus(), 100);
         }
     }
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+    }
+    window.closeModal = closeModal;
+
+    // Close on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeModal(overlay.id);
+        });
+    });
+
+    // 3. Admin Security (10 Clicks Logic)
+    let lockClicks = 0;
+    let lockTimer = null;
+    
+    window.handleAdminClick = function() {
+        lockClicks++;
+        
+        // Reset if user stops clicking for 2 seconds
+        if (lockTimer) clearTimeout(lockTimer);
+        lockTimer = setTimeout(() => { lockClicks = 0; }, 2000);
+
+        if (lockClicks >= 10) {
+            lockClicks = 0; // reset
+            openModal('loginModal');
+        }
+    };
+
+    // 4. Verify Password
+    window.verifyAdminPassword = function() {
+        const input = document.getElementById('adminPasswordInput').value;
+        const correct = window._ADMIN_PWD || "Ivan!_Mzn@2026_#$*";
+        const errMsg = document.getElementById('loginErrorMsg');
+
+        if (input === correct) {
+            closeModal('loginModal');
+            openModal('adminModal');
+            if(window._loadAdminProducts) window._loadAdminProducts();
+        } else {
+            errMsg.classList.remove('hidden');
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('adminPasswordInput').focus();
+            
+            // Re-trigger pulse animation
+            errMsg.style.animation = 'none';
+            setTimeout(() => errMsg.style.animation = '', 10);
+        }
+    };
 </script>
+
 </body>
 </html>
+ 
