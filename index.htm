@@ -6,9 +6,11 @@
     <title>معرض إيفان | Ivan Showroom</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
@@ -21,16 +23,27 @@
                         outfit: ['Outfit', 'sans-serif'],
                     },
                     colors: {
-                        ivan: { red: '#B11216', dark: '#1A1A1A', gold: '#D4AF37' }
+                        ivan: { 
+                            red: '#B11216', 
+                            dark: '#1A1A1A', 
+                            gold: '#D4AF37',
+                            light: '#F8FAFC'
+                        }
                     },
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
-                        'fadeIn': 'fadeIn 0.5s ease forwards',
                         'pulse-slow': 'pulse 3s cubic-bezier(0.4,0,0.6,1) infinite',
+                        'fast-slide': 'fastSlide 0.15s ease-out forwards', /* حركة سريعة جداً للقوائم */
                     },
                     keyframes: {
-                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
-                        fadeIn: { from: { opacity: '0', transform: 'translateY(16px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+                        float: { 
+                            '0%, 100%': { transform: 'translateY(0)' }, 
+                            '50%': { transform: 'translateY(-10px)' } 
+                        },
+                        fastSlide: {
+                            '0%': { opacity: '0', transform: 'translateY(-10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
                     }
                 }
             }
@@ -38,23 +51,26 @@
     </script>
 
     <style>
-        :root { --sidebar-w: 300px; }
-        
-        /* التأثيرات الزجاجية */
-        .glass-panel {
-            background: rgba(255,255,255,0.82);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.55);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.06);
-        }
-        .dark .glass-panel {
-            background: rgba(20,20,28,0.82);
-            border: 1px solid rgba(255,255,255,0.07);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+        :root {
+            --sidebar-w: 300px;
         }
 
-        /* حيوية وتوهج النص (Shine Effect) المضبوط 100% */
+        /* تأثير الزجاج الفاخر (Glassmorphism) */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.25s ease;
+        }
+        .dark .glass-panel {
+            background: rgba(20, 20, 28, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* توهج ولمعان النص (Shine Effect) للمظهر الحيّ */
         .text-shine {
             background: linear-gradient(to right, #1A1A1A 20%, #B11216 40%, #B11216 60%, #1A1A1A 80%);
             background-size: 200% auto;
@@ -62,7 +78,7 @@
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: customShine 3.5s linear infinite;
+            animation: shine 3.5s linear infinite;
         }
         .dark .text-shine {
             background: linear-gradient(to right, #FFFFFF 20%, #D4AF37 40%, #D4AF37 60%, #FFFFFF 80%);
@@ -71,303 +87,607 @@
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: customShine 3.5s linear infinite;
+            animation: shine 3.5s linear infinite;
         }
-        @keyframes customShine {
+        @keyframes shine {
             to { background-position: 200% center; }
         }
 
-        /* توهج خفيف للوجو ليكون حياً (Breathing Glow) */
-        .logo-glow-ring {
+        /* نبض وتوهج الشعار (Breathing Glow) */
+        .logo-glow {
             animation: breathe 3s ease-in-out infinite alternate;
         }
         @keyframes breathe {
-            0% { transform: scale(0.95); opacity: 0.5; }
-            100% { transform: scale(1.15); opacity: 0.8; }
+            0% { transform: scale(0.95); opacity: 0.6; filter: blur(15px); }
+            100% { transform: scale(1.15); opacity: 0.9; filter: blur(25px); }
         }
 
+        /* التدرج اللوني للخلفية */
         .bg-gradient-custom { background: linear-gradient(135deg, #f0f4f8 0%, #dce6f0 100%); }
         .dark .bg-gradient-custom { background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%); }
-        ::-webkit-scrollbar { width: 5px; }
+        
+        /* شريط التمرير (Scrollbar) */
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #B11216; border-radius: 10px; }
         ::-webkit-scrollbar-track { background: transparent; }
 
-        /* SIDEBAR */
+        /* إعدادات القائمة الجانبية السريعة */
         #sidebar {
             position: fixed; top: 0; right: 0; height: 100vh; width: var(--sidebar-w); z-index: 200;
-            transform: translateX(100%); transition: transform 0.38s cubic-bezier(0.4,0,0.2,1); overflow-y: auto;
+            transform: translateX(100%); 
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* سرعة البرق */
+            overflow-y: auto;
         }
         #sidebar.open { transform: translateX(0); }
+        
         #sidebarOverlay {
-            position: fixed; inset: 0; z-index: 199; background: rgba(0,0,0,0.45); backdrop-filter: blur(4px);
-            opacity: 0; pointer-events: none; transition: opacity 0.35s;
+            position: fixed; inset: 0; z-index: 199; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);
+            opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
         }
         #sidebarOverlay.visible { opacity: 1; pointer-events: all; }
 
-        .sidebar-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-radius: 14px; cursor: pointer; transition: all 0.2s; font-size: 15px; font-weight: 600; }
-        .sidebar-item:hover { background: rgba(177,18,22,0.10); color: #B11216; }
-        .dark .sidebar-item:hover { background: rgba(212,175,55,0.12); color: #D4AF37; }
-        .sidebar-item .icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink:0; }
+        /* أزرار القائمة الجانبية */
+        .sidebar-item { 
+            display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-radius: 14px; 
+            cursor: pointer; transition: all 0.15s ease; font-size: 15px; font-weight: 700; 
+        }
+        .sidebar-item:hover { background: rgba(177, 18, 22, 0.12); color: #B11216; transform: translateX(-5px); }
+        .dark .sidebar-item:hover { background: rgba(212, 175, 55, 0.15); color: #D4AF37; }
+        .sidebar-item .icon { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        .action-card { transition: all 0.28s cubic-bezier(0.4,0,0.2,1); }
-        .action-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
-        .contact-btn { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 14px; font-weight: 700; font-size: 15px; transition: all 0.22s; }
-        .contact-btn:hover { transform: scale(1.03); }
+        /* البطاقات والأزرار الرئيسية */
+        .action-card { transition: all 0.2s cubic-bezier(0.4,0,0.2,1); }
+        .action-card:hover { transform: translateY(-5px); box-shadow: 0 25px 50px rgba(177,18,22,0.15); border-color: rgba(177,18,22,0.3); }
+        
+        .contact-btn { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 16px; font-weight: 700; font-size: 15px; transition: all 0.15s ease; }
+        .contact-btn:hover { transform: scale(1.02); filter: brightness(1.05); }
 
-        .stagger-1 { animation: fadeIn 0.5s 0.05s ease both; }
-        .stagger-2 { animation: fadeIn 0.5s 0.15s ease both; }
-        .stagger-3 { animation: fadeIn 0.5s 0.25s ease both; }
-        .stagger-4 { animation: fadeIn 0.5s 0.35s ease both; }
-        .stagger-5 { animation: fadeIn 0.5s 0.45s ease both; }
-        .stagger-6 { animation: fadeIn 0.5s 0.55s ease both; }
+        /* أيقونة السهم في القوائم المنسدلة */
+        .chevron-icon { transition: transform 0.2s ease; }
+        .chevron-icon.rotate { transform: rotate(180deg); }
     </style>
 </head>
 
 <body class="bg-gradient-custom text-gray-800 dark:text-gray-100 font-tajawal transition-colors duration-500 min-h-screen overflow-x-hidden selection:bg-ivan-red selection:text-white">
 
-<div class="fixed top-0 right-0 w-72 h-72 bg-ivan-red rounded-full mix-blend-multiply filter blur-[120px] opacity-15 dark:opacity-25 animate-float pointer-events-none"></div>
-<div class="fixed bottom-0 left-0 w-96 h-96 bg-gray-400 dark:bg-ivan-gold rounded-full mix-blend-multiply filter blur-[140px] opacity-10 dark:opacity-10 animate-float pointer-events-none" style="animation-delay:2s"></div>
+<div class="fixed top-0 right-0 w-80 h-80 bg-ivan-red rounded-full mix-blend-multiply filter blur-[130px] opacity-20 dark:opacity-30 animate-float pointer-events-none z-0"></div>
+<div class="fixed bottom-0 left-0 w-96 h-96 bg-blue-500 dark:bg-ivan-gold rounded-full mix-blend-multiply filter blur-[150px] opacity-10 dark:opacity-15 animate-float pointer-events-none z-0" style="animation-delay: 2s"></div>
 
 <div id="sidebarOverlay" onclick="closeSidebar()"></div>
-<aside id="sidebar" class="glass-panel dark:bg-gray-900 flex flex-col">
-    <div class="p-5 border-b border-gray-100 dark:border-gray-700/50 flex items-center justify-between">
+<aside id="sidebar" class="glass-panel dark:bg-gray-900 flex flex-col border-l border-gray-200 dark:border-gray-800">
+    
+    <div class="p-5 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-white/30 dark:bg-black/20">
         <div class="flex items-center gap-3">
-            <img src="1000519787.jpg" alt="Ivan Logo" class="w-10 h-10 rounded-full object-cover border-2 border-ivan-red" onerror="this.style.display='none'">
+            <div class="relative">
+                <div class="absolute inset-0 bg-ivan-red rounded-full blur-md opacity-40"></div>
+                <img src="1000519787.jpg" alt="Ivan Logo" class="relative w-11 h-11 rounded-full object-cover border-2 border-white dark:border-gray-700 shadow-lg" onerror="this.style.display='none'">
+            </div>
             <div>
-                <div class="font-bold text-gray-900 dark:text-white text-base leading-tight">معرض إيفان</div>
+                <div class="font-bold text-gray-900 dark:text-white text-base leading-tight font-outfit">معرض إيفان</div>
                 <div class="text-[10px] text-gray-500 dark:text-gray-400">پێشانگەها إيفان</div>
             </div>
         </div>
-        <button onclick="closeSidebar()" class="w-9 h-9 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 transition-colors">
-            <i class="fas fa-times"></i>
+        <button onclick="closeSidebar()" class="w-10 h-10 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-ivan-red transition-colors shadow-sm">
+            <i class="fas fa-times text-lg"></i>
         </button>
     </div>
 
-    <nav class="flex-1 p-4 flex flex-col gap-1">
-        <a href="https://maps.app.goo.gl/u6zP3XLVnA5xSKRGA?g_st=ac" target="_blank" class="sidebar-item bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 mb-2 border border-blue-200 dark:border-blue-700/40">
-            <span class="icon bg-blue-600 text-white"><i class="fab fa-google"></i></span>
-            <div><div class="text-sm font-bold">قيّمنا على Google</div><div class="text-[10px] text-blue-500 dark:text-blue-400 font-normal">⭐ رأيك يصنع الفرق</div></div>
+    <nav class="flex-1 p-4 flex flex-col gap-1.5 overflow-y-auto">
+
+        <a href="https://maps.app.goo.gl/u6zP3XLVnA5xSKRGA?g_st=ac" target="_blank" class="sidebar-item bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 mb-3 border border-blue-200 dark:border-blue-700/40 shadow-sm">
+            <span class="icon bg-gradient-to-br from-blue-500 to-blue-700 text-white"><i class="fab fa-google"></i></span>
+            <div>
+                <div class="text-sm font-bold">قيّمنا على Google</div>
+                <div class="text-[10px] text-blue-500 dark:text-blue-400 font-medium">⭐ رأيك يصنع الفرق</div>
+            </div>
         </a>
-        <a href="https://wa.me/9647511869710" target="_blank" class="sidebar-item text-gray-700 dark:text-gray-200">
-            <span class="icon bg-green-500 text-white"><i class="fab fa-whatsapp"></i></span>
-            <div><div class="text-sm">ملاحظات وشكاوي</div><div class="text-[10px] text-gray-400 font-normal">ب ڕێيا واتسئاپێ</div></div>
+
+        <a href="https://wa.me/9647511869710" target="_blank" class="sidebar-item text-gray-700 dark:text-gray-200 hover:bg-green-50 dark:hover:bg-green-900/20">
+            <span class="icon bg-gradient-to-br from-green-400 to-green-600 text-white"><i class="fab fa-whatsapp text-xl"></i></span>
+            <div>
+                <div class="text-sm">ملاحظات وشكاوي</div>
+                <div class="text-[10px] text-gray-400 font-medium">ب ڕێيا واتسئاپێ</div>
+            </div>
         </a>
-        <div class="h-px bg-gray-200 dark:bg-gray-700 my-2"></div>
-        <a href="offers.html" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right">
-            <span class="icon bg-ivan-red text-white"><i class="fas fa-shopping-bag"></i></span>
-            <div><div class="text-sm">التسوق والعروض (صفحة مستقلة)</div><div class="text-[10px] text-gray-400 font-normal">پێشكەشكاریێن تایبەت</div></div>
+
+        <div class="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent my-3"></div>
+
+        <a href="offers.html" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right relative overflow-hidden group">
+            <div class="absolute inset-0 bg-ivan-red/5 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+            <span class="icon bg-gradient-to-br from-ivan-red to-red-800 text-white shadow-red-500/30 relative z-10"><i class="fas fa-shopping-bag"></i></span>
+            <div class="relative z-10">
+                <div class="text-sm">التسوق والعروض (صفحة مستقلة)</div>
+                <div class="text-[10px] text-gray-400 font-medium">پێشكەشكاریێن تایبەت</div>
+            </div>
         </a>
+
         <button onclick="scrollToSection('#contact'); closeSidebar()" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right">
-            <span class="icon bg-emerald-500 text-white"><i class="fas fa-headset"></i></span>
-            <div><div class="text-sm">خدمة العملاء</div><div class="text-[10px] text-gray-400 font-normal">خزمەتا كریارانێ</div></div>
+            <span class="icon bg-gradient-to-br from-emerald-400 to-emerald-600 text-white"><i class="fas fa-headset"></i></span>
+            <div>
+                <div class="text-sm">خدمة العملاء</div>
+                <div class="text-[10px] text-gray-400 font-medium">خزمەتا كریارانێ</div>
+            </div>
         </button>
+
         <button onclick="scrollToSection('#used'); closeSidebar()" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right">
-            <span class="icon bg-amber-500 text-white"><i class="fas fa-recycle"></i></span>
-            <div><div class="text-sm">قسم الأثاث المستعمل</div><div class="text-[10px] text-gray-400 font-normal">بەشا ڕووکارێ بهراندî</div></div>
+            <span class="icon bg-gradient-to-br from-amber-400 to-amber-600 text-white"><i class="fas fa-recycle"></i></span>
+            <div>
+                <div class="text-sm">قسم الأثاث المستعمل</div>
+                <div class="text-[10px] text-gray-400 font-medium">بەشا ڕووکارێ بهراندî</div>
+            </div>
         </button>
+
         <button onclick="scrollToSection('#branches'); closeSidebar()" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right">
-            <span class="icon bg-purple-500 text-white"><i class="fas fa-store"></i></span>
-            <div><div class="text-sm">الفروع المعتمدة</div><div class="text-[10px] text-gray-400 font-normal">لقێن فرمی</div></div>
+            <span class="icon bg-gradient-to-br from-purple-500 to-purple-700 text-white"><i class="fas fa-store"></i></span>
+            <div>
+                <div class="text-sm">الفروع المعتمدة</div>
+                <div class="text-[10px] text-gray-400 font-medium">لقێن فرمی</div>
+            </div>
         </button>
+
         <button onclick="scrollToSection('#factories'); closeSidebar()" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right">
-            <span class="icon bg-gray-600 text-white"><i class="fas fa-industry"></i></span>
-            <div><div class="text-sm">معامل إيفان</div><div class="text-[10px] text-gray-400 font-normal">کارگەهێن ئیڤان</div></div>
+            <span class="icon bg-gradient-to-br from-gray-600 to-gray-800 text-white"><i class="fas fa-industry"></i></span>
+            <div>
+                <div class="text-sm">معامل إيفان</div>
+                <div class="text-[10px] text-gray-400 font-medium">کارگەهێن ئیڤان</div>
+            </div>
         </button>
+
         <button onclick="scrollToSection('#about'); closeSidebar()" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right">
-            <span class="icon bg-cyan-500 text-white"><i class="fas fa-info-circle"></i></span>
-            <div><div class="text-sm">قصتنا وهدفنا</div><div class="text-[10px] text-gray-400 font-normal">çîroka me û armanca me</div></div>
+            <span class="icon bg-gradient-to-br from-cyan-400 to-cyan-600 text-white"><i class="fas fa-info-circle"></i></span>
+            <div>
+                <div class="text-sm">قصتنا وهدفنا</div>
+                <div class="text-[10px] text-gray-400 font-medium">çîroka me û armanca me</div>
+            </div>
         </button>
+
         <button onclick="scrollToSection('#hours'); closeSidebar()" class="sidebar-item text-gray-700 dark:text-gray-200 w-full text-right">
-            <span class="icon bg-yellow-500 text-white"><i class="fas fa-clock"></i></span>
-            <div><div class="text-sm">أوقات الدوام</div><div class="text-[10px] text-gray-400 font-normal">سەعەتێن xebatê</div></div>
+            <span class="icon bg-gradient-to-br from-yellow-400 to-yellow-600 text-white"><i class="fas fa-clock"></i></span>
+            <div>
+                <div class="text-sm">أوقات الدوام</div>
+                <div class="text-[10px] text-gray-400 font-medium">سەعەتێن xebatê</div>
+            </div>
         </button>
+
+        <div class="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent my-3"></div>
+
+        <a href="https://maps.app.goo.gl/u6zP3XLVnA5xSKRGA?g_st=ac" target="_blank" class="sidebar-item text-gray-700 dark:text-gray-200">
+            <span class="icon bg-gradient-to-br from-ivan-red to-red-900 text-white"><i class="fas fa-map-marked-alt"></i></span>
+            <div>
+                <div class="text-sm">موقعنا على الخريطة</div>
+                <div class="text-[10px] text-gray-400 font-medium">Google Maps</div>
+            </div>
+        </a>
     </nav>
-    <div class="p-4 border-t border-gray-100 dark:border-gray-700/50">
-        <p class="text-[11px] text-center text-gray-400 mb-3 font-medium">تابعنا | مە ب شۆپینن</p>
+
+    <div class="p-5 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-black/20">
+        <p class="text-[11px] text-center text-gray-500 mb-3 font-bold tracking-wide">تابعنا | مە ب شۆپینن</p>
         <div class="flex justify-center gap-3">
-            <a href="https://www.instagram.com/ma3rd_ivan1?igsh=dDF4Y2dnYXZ5eGZ3" target="_blank" class="w-9 h-9 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white flex items-center justify-center text-sm shadow hover:-translate-y-1 transition-transform"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.tiktok.com/@ma3rdivan1" target="_blank" class="w-9 h-9 rounded-full bg-black dark:bg-gray-700 text-white flex items-center justify-center text-sm shadow hover:-translate-y-1 transition-transform border border-gray-600"><i class="fab fa-tiktok"></i></a>
-            <a href="https://www.facebook.com/share/1BLDRvJGzr/" target="_blank" class="w-9 h-9 rounded-full bg-[#1877F2] text-white flex items-center justify-center text-sm shadow hover:-translate-y-1 transition-transform"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://www.snapchat.com/add/ivan2012i?src=QR_CODE" target="_blank" class="w-9 h-9 rounded-full bg-yellow-400 text-black flex items-center justify-center text-sm shadow hover:-translate-y-1 transition-transform"><i class="fab fa-snapchat-ghost"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white flex items-center justify-center text-base shadow hover:-translate-y-1 transition-transform"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-black dark:bg-gray-800 text-white flex items-center justify-center text-base shadow hover:-translate-y-1 transition-transform border border-gray-700"><i class="fab fa-tiktok"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-[#1877F2] text-white flex items-center justify-center text-base shadow hover:-translate-y-1 transition-transform"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-yellow-400 text-black flex items-center justify-center text-base shadow hover:-translate-y-1 transition-transform"><i class="fab fa-snapchat-ghost"></i></a>
         </div>
+        <p class="text-[10px] text-center text-gray-400 mt-4 font-outfit">Copyright © 2026 Ivan Showroom</p>
     </div>
 </aside>
 
-<div class="fixed top-0 left-0 right-0 z-100 px-4 py-3 flex items-center justify-between" style="z-index:150">
-    <button id="themeToggle" class="w-11 h-11 rounded-full glass-panel flex items-center justify-center text-lg hover:scale-110 transition-transform text-gray-700 dark:text-yellow-400 shadow-lg">
+<div class="fixed top-0 left-0 right-0 z-50 px-4 py-4 flex items-center justify-between pointer-events-none">
+    <button id="themeToggle" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-xl hover:scale-110 transition-transform text-gray-700 dark:text-yellow-400 shadow-xl pointer-events-auto active:scale-95 border-2 border-white/50 dark:border-gray-700/50">
         <i class="fas fa-moon dark:hidden"></i>
         <i class="fas fa-sun hidden dark:block"></i>
     </button>
-    <button onclick="openSidebar()" class="w-11 h-11 rounded-full glass-panel flex items-center justify-center text-lg hover:scale-110 transition-transform text-gray-700 dark:text-gray-200 shadow-lg">
+    
+    <button onclick="openSidebar()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-xl hover:scale-110 transition-transform text-gray-700 dark:text-gray-100 shadow-xl pointer-events-auto active:scale-95 border-2 border-white/50 dark:border-gray-700/50 hover:text-ivan-red dark:hover:text-ivan-gold">
         <i class="fas fa-bars"></i>
     </button>
 </div>
 
-<main class="relative z-10 max-w-md mx-auto px-4 pt-20 pb-16 flex flex-col items-center min-h-screen">
+<main class="relative z-10 max-w-md mx-auto px-4 pt-24 pb-20 flex flex-col items-center min-h-screen">
 
-    <header class="text-center mb-6 flex flex-col items-center stagger-1">
-        <div class="relative w-36 h-36 mb-5 cursor-pointer animate-float">
-            <div class="absolute inset-0 bg-ivan-red dark:bg-ivan-gold rounded-full blur-xl logo-glow-ring"></div>
+    <header class="text-center mb-8 flex flex-col items-center w-full">
+        <div class="relative w-36 h-36 mb-6 group cursor-default animate-float">
+            <div class="absolute inset-0 bg-gradient-to-r from-ivan-red to-red-500 dark:from-ivan-gold dark:to-yellow-600 rounded-full logo-glow z-0"></div>
             <img src="1000519787.jpg" alt="Ivan Showroom Logo"
-                 class="relative z-10 w-full h-full object-cover rounded-full border-4 border-white dark:border-gray-800 shadow-2xl transition-transform duration-500 hover:scale-105"
+                 class="relative z-10 w-full h-full object-cover rounded-full border-[4px] border-white dark:border-gray-800 shadow-[0_15px_35px_rgba(0,0,0,0.3)] transition-transform duration-500 group-hover:scale-105"
                  onerror="this.style.display='none'">
         </div>
         
-        <h1 class="text-5xl font-extrabold mb-1 text-shine drop-shadow-md pb-1">معرض إيفان</h1>
+        <h1 class="text-5xl font-extrabold mb-1 text-shine drop-shadow-lg pb-1 tracking-tight">معرض إيفان</h1>
         
-        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium tracking-wide mt-1">پێشانگەها ئیڤان</p>
+        <p class="text-sm text-gray-600 dark:text-gray-300 font-bold tracking-widest mt-1 bg-white/50 dark:bg-black/30 px-4 py-1 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm backdrop-blur-sm">پێشانگەها ئیڤان</p>
     </header>
 
-    <div class="w-full relative rounded-3xl overflow-hidden shadow-2xl mb-8 group border border-white/40 dark:border-white/10 stagger-2">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10 pointer-events-none"></div>
-        <img src="1000596284.jpg" alt="واجهة معرض إيفان" class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-700" onerror="this.style.background='linear-gradient(135deg,#1a1a1a,#B11216)'; this.style.height='256px'">
-        <div class="absolute bottom-0 left-0 right-0 z-20 p-5 text-white">
-            <p class="font-bold text-xl leading-snug">أهلاً وسهلاً بكم</p>
-            <p class="text-sm text-white/75">خوش هاتین — دهوك، زركا</p>
+    <div class="w-full relative rounded-[32px] overflow-hidden shadow-2xl mb-10 group border-2 border-white/60 dark:border-white/10">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-10 pointer-events-none"></div>
+        <img src="1000596284.jpg" alt="واجهة معرض إيفان"
+             class="w-full h-72 object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out"
+             onerror="this.style.background='linear-gradient(135deg,#1a1a1a,#B11216)'; this.style.height='288px'">
+        <div class="absolute bottom-0 left-0 right-0 z-20 p-6 text-white transform group-hover:translate-y-[-5px] transition-transform duration-500">
+            <p class="font-extrabold text-2xl leading-snug drop-shadow-md mb-1">أهلاً وسهلاً بكم في إيفان</p>
+            <p class="text-sm text-white/90 font-medium">خوش هاتین — دهوك، زركا</p>
         </div>
     </div>
 
-    <div class="w-full flex flex-col gap-4 mb-8">
-        <a href="https://maps.app.goo.gl/u6zP3XLVnA5xSKRGA?g_st=ac" target="_blank" class="action-card group glass-panel rounded-3xl p-4 flex items-center justify-between relative overflow-hidden border-2 border-transparent hover:border-blue-400/40 stagger-1">
+    <div class="w-full flex flex-col gap-4 mb-10">
+
+        <a href="https://maps.app.goo.gl/u6zP3XLVnA5xSKRGA?g_st=ac" target="_blank"
+           class="action-card group glass-panel rounded-3xl p-4 flex items-center justify-between relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/10 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <div class="flex items-center gap-4 relative z-10">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg text-white text-2xl"><i class="fab fa-google"></i></div>
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/30 text-white text-2xl group-hover:scale-110 transition-transform">
+                    <i class="fab fa-google"></i>
+                </div>
                 <div class="text-right">
-                    <span class="font-bold text-gray-800 dark:text-white text-base block leading-snug">رأيك يهمنا — قيّمنا على Google</span>
-                    <span class="text-[11px] text-gray-500 dark:text-gray-400">خزمەتا مە ل سەر گووگڵ هەلسەنگینە ⭐</span>
+                    <span class="font-bold text-gray-900 dark:text-white text-base block leading-snug">رأيك يهمنا — قيّمنا على Google</span>
+                    <span class="text-[11px] text-gray-500 dark:text-gray-400 font-medium mt-0.5 block">خزمەتا مە ل سەر گووگڵ هەلسەنگینە ⭐</span>
                 </div>
             </div>
-            <i class="fas fa-chevron-left text-gray-400 group-hover:text-blue-500 transition-colors text-lg mr-1"></i>
+            <div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-blue-100 group-hover:text-blue-600 transition-colors z-10">
+                <i class="fas fa-chevron-left text-sm"></i>
+            </div>
         </a>
-        <a href="https://wa.me/9647511869710" target="_blank" class="action-card group glass-panel rounded-3xl p-4 flex items-center justify-between relative overflow-hidden border-2 border-transparent hover:border-green-400/40 stagger-2">
+
+        <a href="https://wa.me/9647511869710" target="_blank"
+           class="action-card group glass-panel rounded-3xl p-4 flex items-center justify-between relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-green-500/0 via-green-500/10 to-green-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <div class="flex items-center gap-4 relative z-10">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-lg text-white text-2xl"><i class="fab fa-whatsapp"></i></div>
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-lg shadow-green-500/30 text-white text-2xl group-hover:scale-110 transition-transform">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
                 <div class="text-right">
-                    <span class="font-bold text-gray-800 dark:text-white text-base block leading-snug">ملاحظة أو شكوى؟ تواصل معنا</span>
-                    <span class="text-[11px] text-gray-500 dark:text-gray-400">ب ڕێيا واتسئاپێ پەیوەندیێ ب مە بکەن</span>
+                    <span class="font-bold text-gray-900 dark:text-white text-base block leading-snug">ملاحظة أو شكوى؟ تواصل معنا</span>
+                    <span class="text-[11px] text-gray-500 dark:text-gray-400 font-medium mt-0.5 block">ب ڕێيا واتسئاپێ پەیوەندیێ ب مە بکەن</span>
                 </div>
             </div>
-            <i class="fas fa-chevron-left text-gray-400 group-hover:text-green-500 transition-colors text-lg mr-1"></i>
+            <div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-green-100 group-hover:text-green-600 transition-colors z-10">
+                <i class="fas fa-chevron-left text-sm"></i>
+            </div>
         </a>
-        <a href="offers.html" class="action-card group glass-panel rounded-3xl p-4 flex items-center justify-between relative overflow-hidden border-2 border-transparent hover:border-red-400/40 w-full text-right stagger-3">
+
+        <a href="offers.html"
+           class="action-card group glass-panel rounded-3xl p-4 flex items-center justify-between relative overflow-hidden border-2 border-ivan-red/30 hover:border-ivan-red/80 shadow-[0_10px_30px_rgba(177,18,22,0.15)]">
+            <div class="absolute inset-0 bg-ivan-red/5 group-hover:bg-ivan-red/10 transition-colors duration-300"></div>
             <div class="flex items-center gap-4 relative z-10">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-ivan-red to-red-800 flex items-center justify-center shadow-lg text-white text-2xl"><i class="fas fa-shopping-cart"></i></div>
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-ivan-red to-red-900 flex items-center justify-center shadow-lg shadow-red-500/40 text-white text-2xl group-hover:scale-110 transition-transform">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
                 <div class="text-right">
-                    <span class="font-bold text-gray-800 dark:text-white text-base block leading-snug">التسوق والعروض الحصرية</span>
-                    <span class="text-[11px] text-gray-500 dark:text-gray-400">تصفح أحدث عروض المعرض</span>
+                    <span class="font-bold text-gray-900 dark:text-white text-base block leading-snug">التسوق والعروض الحصرية</span>
+                    <span class="text-[11px] text-gray-500 dark:text-gray-400 font-medium mt-0.5 block">تصفح أحدث عروض المعرض الفاخرة</span>
                 </div>
             </div>
-            <span class="px-3 py-1 bg-ivan-red text-white text-[11px] rounded-full font-bold animate-pulse-slow">جديد</span>
+            <span class="px-4 py-1.5 bg-ivan-red text-white text-xs rounded-full font-bold shadow-md shadow-red-500/50 animate-pulse z-10">جديد</span>
         </a>
     </div>
 
-    <section id="contact" class="w-full mb-8 stagger-4">
-        <div class="flex items-center gap-3 mb-4"><div class="w-1 h-8 bg-emerald-500 rounded-full"></div><div><h2 class="text-xl font-bold text-gray-900 dark:text-white">خدمة العملاء</h2><p class="text-[11px] text-gray-500 dark:text-gray-400">خزمەتا كریارانێ — پەیوەندی بکەن</p></div></div>
+    <section id="contact" class="w-full mb-10">
+        <div class="flex items-center gap-3 mb-5 pl-2">
+            <div class="w-1.5 h-8 bg-gradient-to-b from-emerald-400 to-emerald-600 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
+            <div>
+                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white">خدمة العملاء</h2>
+                <p class="text-[11px] font-bold text-gray-500 dark:text-gray-400 mt-0.5">خزمەتا كریارانێ — پەیوەندی بکەن</p>
+            </div>
+        </div>
+
         <div class="glass-panel rounded-3xl p-5 flex flex-col gap-3">
-            <button onclick="toggleDropdown('contactList')" class="w-full flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-xl font-bold text-gray-800 dark:text-white transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 shadow-sm">
-                <div class="flex items-center gap-2"><i class="fas fa-headset text-emerald-500"></i> اختر طريقة التواصل</div>
-                <i class="fas fa-chevron-down transition-transform duration-300" id="contactList-icon"></i>
+            <div class="mb-2">
+                <p class="text-sm text-gray-800 dark:text-gray-200 font-bold mb-1">تواصل مباشر مع موظفينا</p>
+                <p class="text-[11px] text-gray-500 dark:text-gray-400">ب ڕاستی پەیوەندیێ ب خزمەتا كریارانێ بکەن</p>
+            </div>
+
+            <button onclick="toggleFastDropdown('contactList')" class="w-full flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800/80 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-2xl font-bold text-gray-800 dark:text-white transition-colors border border-gray-200 dark:border-gray-700 shadow-sm active:scale-[0.98]">
+                <div class="flex items-center gap-3"><i class="fas fa-headset text-emerald-500 text-lg"></i> اختر طريقة التواصل الآن</div>
+                <i class="fas fa-chevron-down chevron-icon text-gray-400" id="contactList-icon"></i>
             </button>
-            <div id="contactList" class="hidden flex-col gap-3 mt-2 animate-fadeIn">
-                <a href="https://wa.me/9647514844125" target="_blank" class="contact-btn bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700/40 hover:bg-green-100"><div class="w-10 h-10 rounded-xl bg-green-500 text-white flex items-center justify-center text-lg shadow"><i class="fab fa-whatsapp"></i></div><div><div class="text-sm font-bold">واتساب</div><div class="text-[11px] text-green-600 dark:text-green-400">+964 751 484 4125</div></div><i class="fas fa-arrow-left mr-auto text-green-400 text-sm"></i></a>
-                <a href="viber://chat?number=9647514844125" class="contact-btn bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700/40 hover:bg-purple-100"><div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center text-lg shadow"><i class="fab fa-viber"></i></div><div><div class="text-sm font-bold">فايبر</div><div class="text-[11px] text-purple-600 dark:text-purple-400">+964 751 484 4125</div></div><i class="fas fa-arrow-left mr-auto text-purple-400 text-sm"></i></a>
-                <a href="tel:+9647514844125" class="contact-btn bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-700/40 hover:bg-orange-100"><div class="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center text-lg shadow"><i class="fas fa-phone"></i></div><div><div class="text-sm font-bold">كورك — مكالمة</div><div class="text-[11px] text-orange-600 dark:text-orange-400">+964 751 484 4125</div></div><i class="fas fa-arrow-left mr-auto text-orange-400 text-sm"></i></a>
+
+            <div id="contactList" class="hidden flex-col gap-3 mt-2">
+                <a href="https://wa.me/9647514844125" target="_blank" class="contact-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:border-green-400">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#25D366] to-[#128C7E] text-white flex items-center justify-center text-2xl shadow-lg shadow-green-500/20"><i class="fab fa-whatsapp"></i></div>
+                    <div class="flex-1"><div class="text-base font-bold text-gray-900 dark:text-white">واتساب</div><div class="text-xs text-green-600 dark:text-green-400 font-outfit tracking-wider">+964 751 484 4125</div></div>
+                    <div class="w-8 h-8 rounded-full bg-gray-50 dark:bg-gray-700 flex items-center justify-center text-gray-400"><i class="fas fa-arrow-left text-sm"></i></div>
+                </a>
+                <a href="viber://chat?number=9647514844125" class="contact-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:border-purple-400">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#7360F2] to-[#5926B6] text-white flex items-center justify-center text-2xl shadow-lg shadow-purple-500/20"><i class="fab fa-viber"></i></div>
+                    <div class="flex-1"><div class="text-base font-bold text-gray-900 dark:text-white">فايبر</div><div class="text-xs text-purple-600 dark:text-purple-400 font-outfit tracking-wider">+964 751 484 4125</div></div>
+                    <div class="w-8 h-8 rounded-full bg-gray-50 dark:bg-gray-700 flex items-center justify-center text-gray-400"><i class="fas fa-arrow-left text-sm"></i></div>
+                </a>
+                <a href="tel:+9647514844125" class="contact-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:border-orange-400">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#FF7A00] to-[#E65100] text-white flex items-center justify-center text-xl shadow-lg shadow-orange-500/20"><i class="fas fa-phone-alt"></i></div>
+                    <div class="flex-1"><div class="text-base font-bold text-gray-900 dark:text-white">كورك — مكالمة</div><div class="text-xs text-orange-600 dark:text-orange-400 font-outfit tracking-wider">+964 751 484 4125</div></div>
+                    <div class="w-8 h-8 rounded-full bg-gray-50 dark:bg-gray-700 flex items-center justify-center text-gray-400"><i class="fas fa-arrow-left text-sm"></i></div>
+                </a>
             </div>
         </div>
     </section>
 
-    <section id="used" class="w-full mb-8 stagger-5">
-        <div class="flex items-center gap-3 mb-4"><div class="w-1 h-8 bg-amber-500 rounded-full"></div><div><h2 class="text-xl font-bold text-gray-900 dark:text-white">قسم الأثاث المستعمل</h2><p class="text-[11px] text-gray-500 dark:text-gray-400">بەشا ڕووکارێن بهراندî — بحالة ممتازة</p></div></div>
+    <section id="used" class="w-full mb-10">
+        <div class="flex items-center gap-3 mb-5 pl-2">
+            <div class="w-1.5 h-8 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
+            <div>
+                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white">قسم الأثاث المستعمل</h2>
+                <p class="text-[11px] font-bold text-gray-500 dark:text-gray-400 mt-0.5">بەشا ڕووکارێن بهراندî — بحالة ممتازة</p>
+            </div>
+        </div>
+
         <div class="glass-panel rounded-3xl p-5">
-            <button onclick="toggleDropdown('usedList')" class="w-full flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-xl font-bold text-gray-800 dark:text-white transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 shadow-sm mb-2">
-                <div class="flex items-center gap-2"><i class="fas fa-recycle text-amber-500"></i> طرق التواصل المتوفرة</div>
-                <i class="fas fa-chevron-down transition-transform duration-300" id="usedList-icon"></i>
+            <div class="mb-4 text-center p-3 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-800/30 rounded-2xl">
+                <p class="text-sm text-amber-800 dark:text-amber-400 font-bold mb-1">هل تريد بيع أثاثك المستعمل؟ تواصل معنا!</p>
+                <p class="text-[10px] text-amber-600/80 dark:text-amber-500/80 font-medium">ئایا ئۇ ڕووکارێت بهراندî دبەیت بفروشی؟ نووکە پەیوەندیێ بکەن</p>
+            </div>
+
+            <button onclick="toggleFastDropdown('usedList')" class="w-full flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800/80 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-2xl font-bold text-gray-800 dark:text-white transition-colors border border-gray-200 dark:border-gray-700 shadow-sm active:scale-[0.98]">
+                <div class="flex items-center gap-3"><i class="fas fa-recycle text-amber-500 text-lg"></i> عرض أرقام القسم</div>
+                <i class="fas fa-chevron-down chevron-icon text-gray-400" id="usedList-icon"></i>
             </button>
-            <div id="usedList" class="hidden flex-col gap-3 mt-2 animate-fadeIn">
-                <a href="https://wa.me/9647515406256" target="_blank" class="contact-btn bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700/40 hover:bg-green-100"><div class="w-10 h-10 rounded-xl bg-green-500 text-white flex items-center justify-center text-lg shadow"><i class="fab fa-whatsapp"></i></div><div><div class="text-sm font-bold">واتساب</div><div class="text-[11px] text-green-600 dark:text-green-400">+964 751 540 6256</div></div><i class="fas fa-arrow-left mr-auto text-green-400 text-sm"></i></a>
-                <a href="viber://chat?number=9647515406256" class="contact-btn bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700/40"><div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center text-lg shadow"><i class="fab fa-viber"></i></div><div><div class="text-sm font-bold">فايبر</div><div class="text-[11px] text-purple-600 dark:text-purple-400">+964 751 540 6256</div></div><i class="fas fa-arrow-left mr-auto text-purple-400 text-sm"></i></a>
-                <a href="tel:+9647515406256" class="contact-btn bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-700/40"><div class="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center text-lg shadow"><i class="fas fa-phone"></i></div><div><div class="text-sm font-bold">كورك — مكالمة</div><div class="text-[11px] text-orange-600 dark:text-orange-400">+964 751 540 6256</div></div><i class="fas fa-arrow-left mr-auto text-orange-400 text-sm"></i></a>
+
+            <div id="usedList" class="hidden flex-col gap-3 mt-3">
+                <a href="https://wa.me/9647515406256" target="_blank" class="contact-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:border-green-400">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#25D366] to-[#128C7E] text-white flex items-center justify-center text-2xl shadow-lg shadow-green-500/20"><i class="fab fa-whatsapp"></i></div>
+                    <div class="flex-1"><div class="text-base font-bold text-gray-900 dark:text-white">واتساب مباشر</div><div class="text-xs text-green-600 dark:text-green-400 font-outfit tracking-wider">+964 751 540 6256</div></div>
+                    <div class="w-8 h-8 rounded-full bg-gray-50 dark:bg-gray-700 flex items-center justify-center text-gray-400"><i class="fas fa-arrow-left text-sm"></i></div>
+                </a>
+                <a href="viber://chat?number=9647515406256" class="contact-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:border-purple-400">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#7360F2] to-[#5926B6] text-white flex items-center justify-center text-2xl shadow-lg shadow-purple-500/20"><i class="fab fa-viber"></i></div>
+                    <div class="flex-1"><div class="text-base font-bold text-gray-900 dark:text-white">فايبر</div><div class="text-xs text-purple-600 dark:text-purple-400 font-outfit tracking-wider">+964 751 540 6256</div></div>
+                    <div class="w-8 h-8 rounded-full bg-gray-50 dark:bg-gray-700 flex items-center justify-center text-gray-400"><i class="fas fa-arrow-left text-sm"></i></div>
+                </a>
+                <a href="tel:+9647515406256" class="contact-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:border-orange-400">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#FF7A00] to-[#E65100] text-white flex items-center justify-center text-xl shadow-lg shadow-orange-500/20"><i class="fas fa-phone-alt"></i></div>
+                    <div class="flex-1"><div class="text-base font-bold text-gray-900 dark:text-white">كورك — مكالمة</div><div class="text-xs text-orange-600 dark:text-orange-400 font-outfit tracking-wider">+964 751 540 6256</div></div>
+                    <div class="w-8 h-8 rounded-full bg-gray-50 dark:bg-gray-700 flex items-center justify-center text-gray-400"><i class="fas fa-arrow-left text-sm"></i></div>
+                </a>
             </div>
         </div>
     </section>
 
-    <section id="branches" class="w-full mb-8 stagger-5">
-        <div class="flex items-center gap-3 mb-4"><div class="w-1 h-8 bg-purple-500 rounded-full"></div><div><h2 class="text-xl font-bold text-gray-900 dark:text-white">فروعنا المعتمدة</h2><p class="text-[11px] text-gray-500 dark:text-gray-400">لقێن فرمی ی ئیڤان</p></div></div>
+    <section id="branches" class="w-full mb-10">
+        <div class="flex items-center gap-3 mb-5 pl-2">
+            <div class="w-1.5 h-8 bg-gradient-to-b from-purple-500 to-purple-700 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.5)]"></div>
+            <div>
+                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white">فروعنا المعتمدة</h2>
+                <p class="text-[11px] font-bold text-gray-500 dark:text-gray-400 mt-0.5">لقێن فرمی ی ئیڤان</p>
+            </div>
+        </div>
+        
+        <div class="flex flex-col gap-5">
+            <div class="glass-panel rounded-[28px] p-5 flex gap-5 items-start hover:border-purple-300 dark:hover:border-purple-700/50 transition-colors relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-2 h-full bg-purple-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="w-14 h-14 rounded-2xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center text-2xl shrink-0 shadow-inner group-hover:scale-110 transition-transform">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-gray-900 dark:text-white text-lg mb-1">الفرع الرئيسي: دهوك — زركا</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-medium">مقابل سجن زركا، محافظة دهوك</p>
+                    <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1 font-medium">دهوک، بەرامبەر زیندانا زرکا</p>
+                    <a href="https://maps.app.goo.gl/u6zP3XLVnA5xSKRGA?g_st=ac" target="_blank" class="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400 rounded-xl text-xs font-bold hover:bg-purple-100 transition-colors shadow-sm border border-purple-100 dark:border-purple-800/30">
+                        <i class="fas fa-location-arrow"></i> عرض الموقع على الخريطة
+                    </a>
+                </div>
+            </div>
+            
+            <div class="glass-panel rounded-[28px] p-5 flex gap-5 items-start hover:border-indigo-300 dark:hover:border-indigo-700/50 transition-colors relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-2 h-full bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="w-14 h-14 rounded-2xl bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-2xl shrink-0 shadow-inner group-hover:scale-110 transition-transform">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-gray-900 dark:text-white text-lg mb-1">فرع مدينة زاخو</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-medium">شارع المحكمة الجديدة، بالقرب من ماركيت زاخو بازار</p>
+                    <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1 font-medium">شارەع دادگاها نوپ، نزیک ماركيت زاخو بازار</p>
+                    <a href="https://wa.me/9647514412646" target="_blank" class="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-xl text-xs font-bold hover:bg-green-100 transition-colors shadow-sm border border-green-100 dark:border-green-800/30">
+                        <i class="fab fa-whatsapp text-sm"></i> تواصل مع فرع زاخو
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="factories" class="w-full mb-10">
+        <div class="flex items-center gap-3 mb-5 pl-2">
+            <div class="w-1.5 h-8 bg-gradient-to-b from-gray-500 to-gray-700 rounded-full shadow-[0_0_10px_rgba(107,114,128,0.5)]"></div>
+            <div>
+                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white">معامل معرض إيفان</h2>
+                <p class="text-[11px] font-bold text-gray-500 dark:text-gray-400 mt-0.5">کارگەهێن ئیڤان — الجودة من الصفر</p>
+            </div>
+        </div>
+        
         <div class="flex flex-col gap-4">
-            <div class="glass-panel rounded-2xl p-4 flex gap-4 items-start">
-                <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="fas fa-map-marker-alt"></i></div>
-                <div><h3 class="font-bold text-gray-900 dark:text-white text-base">دهوك — زركا</h3><p class="text-sm text-gray-600 dark:text-gray-300 mt-1">مقابل سجن زركا، دهوك</p><p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1">دهوک، بەرامبەر زیندانا زرکا</p></div>
+            <div class="glass-panel rounded-3xl p-4 flex items-center justify-between group hover:shadow-md transition-all">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl shrink-0 group-hover:rotate-12 transition-transform"><i class="fas fa-tree"></i></div>
+                    <div>
+                        <h3 class="font-bold text-gray-900 dark:text-white text-base">معمل الأخشاب</h3>
+                        <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">قناصير، ميز، تواليت، تخوت</p>
+                    </div>
+                </div>
+                <a href="https://wa.me/9647500524236" target="_blank" class="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 flex items-center justify-center text-lg hover:bg-green-500 hover:text-white transition-colors border border-green-200 dark:border-green-800/30 shrink-0"><i class="fab fa-whatsapp"></i></a>
             </div>
-            <div class="glass-panel rounded-2xl p-4 flex gap-4 items-start">
-                <div class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="fas fa-map-marker-alt"></i></div>
-                <div><h3 class="font-bold text-gray-900 dark:text-white text-base">زاخو</h3><p class="text-sm text-gray-600 dark:text-gray-300 mt-1">شارع المحكمة الجديدة، قرب ماركيت زاخو بازار</p><p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1">شارەع دادگاها نوپ، نزیک ماركيت زاخو بازار</p></div>
+
+            <div class="glass-panel rounded-3xl p-4 flex items-center justify-between group hover:shadow-md transition-all">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform"><i class="fas fa-couch"></i></div>
+                    <div>
+                        <h3 class="font-bold text-gray-900 dark:text-white text-base">معمل الدواوين والقنفات</h3>
+                        <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">تصنيع دواوين إيفان الفاخرة</p>
+                    </div>
+                </div>
+                <a href="https://wa.me/9647514412646" target="_blank" class="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 flex items-center justify-center text-lg hover:bg-green-500 hover:text-white transition-colors border border-green-200 dark:border-green-800/30 shrink-0"><i class="fab fa-whatsapp"></i></a>
+            </div>
+
+            <div class="glass-panel rounded-3xl p-4 flex items-center justify-between group hover:shadow-md transition-all">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 flex items-center justify-center text-xl shrink-0 group-hover:-rotate-12 transition-transform"><i class="fas fa-layer-group"></i></div>
+                    <div>
+                        <h3 class="font-bold text-gray-900 dark:text-white text-base">معمل الألمنيوم</h3>
+                        <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">تصنيع قطع الألمنيوم المتينة</p>
+                    </div>
+                </div>
+                <a href="https://wa.me/9647517122765" target="_blank" class="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 flex items-center justify-center text-lg hover:bg-green-500 hover:text-white transition-colors border border-green-200 dark:border-green-800/30 shrink-0"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
     </section>
 
-    <section id="factories" class="w-full mb-8 stagger-6">
-        <div class="flex items-center gap-3 mb-4"><div class="w-1 h-8 bg-gray-500 rounded-full"></div><div><h2 class="text-xl font-bold text-gray-900 dark:text-white">معامل معرض إيفان</h2><p class="text-[11px] text-gray-500 dark:text-gray-400">کارگەهێن ئیڤان</p></div></div>
-        <div class="flex flex-col gap-4">
-            <div class="glass-panel rounded-2xl p-4 flex gap-4 items-start"><div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="fas fa-tree"></i></div><div class="flex-1"><h3 class="font-bold text-gray-900 dark:text-white text-base">معمل الأخشاب</h3><p class="text-[11px] text-gray-400 mt-1">کارگەها darî</p><a href="https://wa.me/9647500524236" target="_blank" class="inline-flex items-center gap-2 mt-2 text-green-600 dark:text-green-400 text-xs font-bold"><i class="fab fa-whatsapp"></i> +964 750 052 4236</a></div></div>
-            <div class="glass-panel rounded-2xl p-4 flex gap-4 items-start"><div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="fas fa-couch"></i></div><div class="flex-1"><h3 class="font-bold text-gray-900 dark:text-white text-base">معمل الدواوين والقنفات</h3><p class="text-[11px] text-gray-400 mt-1">کارگەها kanafet</p><a href="https://wa.me/9647514412646" target="_blank" class="inline-flex items-center gap-2 mt-2 text-green-600 dark:text-green-400 text-xs font-bold"><i class="fab fa-whatsapp"></i> +964 751 441 2646</a></div></div>
-            <div class="glass-panel rounded-2xl p-4 flex gap-4 items-start"><div class="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="fas fa-layer-group"></i></div><div class="flex-1"><h3 class="font-bold text-gray-900 dark:text-white text-base">معمل الألمنيوم</h3><p class="text-[11px] text-gray-400 mt-1">کارگەها aluminium</p><a href="https://wa.me/9647517122765" target="_blank" class="inline-flex items-center gap-2 mt-2 text-green-600 dark:text-green-400 text-xs font-bold"><i class="fab fa-whatsapp"></i> +964 751 712 2765</a></div></div>
+    <section id="about" class="w-full mb-10">
+        <div class="flex items-center gap-3 mb-5 pl-2">
+            <div class="w-1.5 h-8 bg-gradient-to-b from-cyan-400 to-cyan-600 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.5)]"></div>
+            <div>
+                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white">قصتنا وهدفنا</h2>
+                <p class="text-[11px] font-bold text-gray-500 dark:text-gray-400 mt-0.5">çîroka me û armanca me</p>
+            </div>
+        </div>
+        
+        <div class="glass-panel rounded-[32px] p-7 flex flex-col gap-6">
+            
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 text-ivan-red flex items-center justify-center"><i class="fas fa-users text-sm"></i></div>
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white">من نحن</h3>
+                </div>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium pr-11">
+                    نحن في معرض إيفان عائلة كبيرة تضم حوالي 50 موظفاً وعاملاً يعملون بجهد وشغف دائم، موزعين بتنظيم عالٍ على 7 طوابق متكاملة. هدفنا الأول والأخير هو تقديم خدمة عملاء ممتازة تليق بضيوفنا قبل التفكير في أي أرباح.
+                </p>
+                <p class="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed mt-2 pr-11 font-medium">em li pêşangeha Ivan malbateke mezin a bi 50 karmend in ku bi hevkarî û dildarî xebitîn.</p>
+            </div>
+            
+            <div class="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
+            
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-8 h-8 rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 flex items-center justify-center"><i class="fas fa-building text-sm"></i></div>
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white">نبذة عنا</h3>
+                </div>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium pr-11">
+                    تأسس معرض إيفان في عام 2017 ونفخر اليوم بكوننا مؤسسة متكاملة تضم 7 طوابق للعرض، ويدعمها 3 معامل إنتاجية تابعة لنا. كما نتوسع جغرافياً عبر قسمنا الخاص في مدينة زاخو لخدمة عملائنا بشكل أوسع.
+                </p>
+                <p class="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed mt-2 pr-11 font-medium">Pêşangeha Ivan di sala 2017'an de hate damezrandin û xwedan 7 qat û 3 kargehê ye.</p>
+            </div>
+
+            <div class="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
+            
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 flex items-center justify-center"><i class="fas fa-eye text-sm"></i></div>
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white">رؤيتنا وأهدافنا</h3>
+                </div>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium pr-11">
+                    نهدف إلى تقديم خدمات تضاهي الجودة العالمية، ونسعى لأن تكون بصمة "إيفان" موجودة في كل منزل من خلال توفير الراحة، الأناقة، والمتانة.
+                </p>
+                <p class="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed mt-2 pr-11 font-medium">Armanca me peşkêşkirina xizmetên kalîteya cîhanî ye û bibe xwedan cihê xwe di her malekê de.</p>
+            </div>
+
+            <div class="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
+            
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 text-red-500 flex items-center justify-center"><i class="fas fa-heart text-sm"></i></div>
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white">قيمنا الأساسية</h3>
+                </div>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium pr-11">
+                    الوضوح والشفافية التامة مع العملاء. هدفنا الأول هو الخدمة وإرضاء العميل وليس مجرد الربح المادي. نؤمن بالأمانة، الجودة، والعمل بروح الفريق الواحد.
+                </p>
+                <p class="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed mt-2 pr-11 font-medium">Eşkereyî û şefafî digel muşteriyên, dilsozî, kalîte û xebata komê.</p>
+            </div>
+
         </div>
     </section>
 
-    <section id="about" class="w-full mb-8 stagger-6">
-        <div class="flex items-center gap-3 mb-4"><div class="w-1 h-8 bg-cyan-500 rounded-full"></div><div><h2 class="text-xl font-bold text-gray-900 dark:text-white">قصتنا وهدفنا</h2><p class="text-[11px] text-gray-500 dark:text-gray-400">çîroka me û armanca me</p></div></div>
-        <div class="glass-panel rounded-3xl p-6 flex flex-col gap-5">
-            <div><div class="flex items-center gap-2 mb-2"><i class="fas fa-users text-ivan-red"></i><h3 class="font-bold text-gray-900 dark:text-white">من نحن</h3></div><p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">نحن في معرض إيفان عائلة كبيرة تضم حوالي 50 موظفاً وعاملاً يعملون بجهد وشغف دائم، موزعين بتنظيم عالٍ على 7 طوابق متكاملة.</p></div>
-            <div class="h-px bg-gray-200 dark:bg-gray-700/50"></div>
-            <div><div class="flex items-center gap-2 mb-2"><i class="fas fa-eye text-purple-500"></i><h3 class="font-bold text-gray-900 dark:text-white">رؤيتنا وأهدافنا</h3></div><p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">نهدف إلى تقديم خدمات تضاهي الجودة العالمية، ونسعى لأن تكون بصمة "إيفان" موجودة في كل منزل من خلال توفير الراحة والأناقة.</p></div>
+    <section id="hours" class="w-full mb-10">
+        <div class="glass-panel rounded-[32px] p-6 flex flex-col md:flex-row gap-5 items-center justify-center text-center relative overflow-hidden border border-yellow-200/50 dark:border-yellow-900/30">
+            <div class="absolute inset-0 bg-yellow-50/50 dark:bg-yellow-900/10 z-0 pointer-events-none"></div>
+            
+            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 text-white flex items-center justify-center text-3xl shadow-lg shadow-yellow-500/40 relative z-10 animate-float">
+                <i class="far fa-clock"></i>
+            </div>
+            
+            <div class="relative z-10">
+                <h3 class="font-extrabold text-xl text-gray-900 dark:text-white mb-2">أوقات الدوام الرسمي</h3>
+                <div class="inline-block bg-white dark:bg-gray-800 border-2 border-yellow-400 rounded-2xl px-6 py-3 mb-3 shadow-sm">
+                    <p class="text-2xl font-extrabold font-outfit text-gray-900 dark:text-white tracking-widest text-shine">10:00 AM — 8:30 PM</p>
+                </div>
+                <p class="text-sm text-gray-700 dark:text-gray-300 font-bold"><i class="fas fa-calendar-times text-ivan-red ml-1.5"></i> يوم الجمعة عطلة رسمية (بێهنڤەدانە)</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1.5 font-medium">ژ 10 سپێدێ تا 8:30 ئێڤارێ</p>
+            </div>
         </div>
     </section>
 
-    <section id="hours" class="w-full mb-8">
-        <div class="glass-panel rounded-3xl p-6 flex gap-4 items-start">
-            <div class="w-12 h-12 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="far fa-clock"></i></div>
-            <div><h3 class="font-bold text-gray-900 dark:text-white mb-1">أوقات الدوام</h3><div class="inline-block bg-white/60 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 mb-2"><p class="text-lg font-bold font-outfit text-gray-900 dark:text-white tracking-wider">10:00 AM — 8:30 PM</p></div><p class="text-sm text-gray-700 dark:text-gray-300"><i class="fas fa-calendar-times text-ivan-red ml-1"></i> يوم الجمعة عطلة رسمية</p></div>
-        </div>
-    </section>
-
-    <div class="w-full glass-panel rounded-3xl p-6 mb-10 text-center flex flex-col items-center shadow-lg">
-        <h3 class="font-bold text-gray-800 dark:text-white mb-1 text-lg">تابعنا على منصاتنا</h3>
-        <p class="text-[11px] text-gray-500 dark:text-gray-400 mb-5">مە ب سۆشیاڵ میدیایێ ب شۆپینن</p>
-        <div class="flex items-center justify-center gap-4 flex-wrap">
-            <a href="https://www.instagram.com/ma3rd_ivan1?igsh=dDF4Y2dnYXZ5eGZ3" target="_blank" class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white flex items-center justify-center text-2xl shadow-lg hover:-translate-y-2 hover:shadow-xl transition-all duration-300"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.tiktok.com/@ma3rdivan1" target="_blank" class="w-14 h-14 rounded-2xl bg-black text-white flex items-center justify-center text-2xl shadow-lg hover:-translate-y-2 hover:shadow-xl transition-all duration-300 border border-gray-700"><i class="fab fa-tiktok"></i></a>
-            <a href="https://www.facebook.com/share/1BLDRvJGzr/" target="_blank" class="w-14 h-14 rounded-2xl bg-[#1877F2] text-white flex items-center justify-center text-2xl shadow-lg hover:-translate-y-2 hover:shadow-xl transition-all duration-300"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://www.snapchat.com/add/ivan2012i?src=QR_CODE" target="_blank" class="w-14 h-14 rounded-2xl bg-yellow-400 text-black flex items-center justify-center text-2xl shadow-lg hover:-translate-y-2 hover:shadow-xl transition-all duration-300"><i class="fab fa-snapchat-ghost"></i></a>
+    <div class="w-full glass-panel rounded-[32px] p-8 mb-10 text-center flex flex-col items-center shadow-lg relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 via-red-500 to-purple-500"></div>
+        <h3 class="font-extrabold text-gray-900 dark:text-white mb-1 text-xl">تابعنا على منصاتنا</h3>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-6 font-medium tracking-wide">مە ب سۆشیاڵ میدیایێ ب شۆپینن</p>
+        
+        <div class="flex items-center justify-center gap-5 flex-wrap">
+            <a href="#" class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white flex items-center justify-center text-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl hover:shadow-red-500/40 transition-all duration-300"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-14 h-14 rounded-2xl bg-black text-white flex items-center justify-center text-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 border border-gray-700"><i class="fab fa-tiktok"></i></a>
+            <a href="#" class="w-14 h-14 rounded-2xl bg-[#1877F2] text-white flex items-center justify-center text-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/40 transition-all duration-300"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-14 h-14 rounded-2xl bg-yellow-400 text-black flex items-center justify-center text-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl hover:shadow-yellow-500/40 transition-all duration-300"><i class="fab fa-snapchat-ghost"></i></a>
         </div>
     </div>
 
-    <footer class="text-center w-full mt-auto">
-        <div class="glass-panel rounded-2xl py-4 px-6 inline-block shadow-sm text-center">
-            <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">جميع الحقوق محفوظة © <span class="font-outfit font-bold">2026</span> معرض إيفان</p>
-            <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-1 font-outfit">Copyright © 2026 Ivan Showroom — All Rights Reserved</p>
+    <footer class="text-center w-full mt-auto mb-4">
+        <div class="glass-panel rounded-full py-4 px-8 inline-block shadow-sm text-center border-t-2 border-ivan-red/20">
+            <p class="text-sm text-gray-700 dark:text-gray-300 font-bold mb-1">
+                جميع الحقوق محفوظة © <span class="font-outfit font-extrabold text-ivan-red dark:text-ivan-gold">2026</span> معرض إيفان
+            </p>
+            <p class="text-[10px] text-gray-400 dark:text-gray-500 font-outfit tracking-wider">
+                Copyright © 2026 Ivan Showroom — All Rights Reserved
+            </p>
         </div>
     </footer>
 
 </main>
 
 <script>
+    // نظام الوضع الليلي (Dark Mode)
     const themeToggleBtn = document.getElementById('themeToggle');
     const html = document.documentElement;
-    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { html.classList.add('dark'); }
-    themeToggleBtn.addEventListener('click', () => { html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        html.classList.add('dark');
+    }
+    themeToggleBtn.addEventListener('click', () => {
+        html.classList.toggle('dark');
+        localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
 
-    function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('visible'); document.body.style.overflow = 'hidden'; }
-    function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('visible'); document.body.style.overflow = ''; }
-    window.openSidebar = openSidebar; window.closeSidebar = closeSidebar;
+    // التحكم في القائمة الجانبية (بسرعة البرق)
+    function openSidebar() {
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebarOverlay').classList.add('visible');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('visible');
+        document.body.style.overflow = '';
+    }
+    window.openSidebar = openSidebar;
+    window.closeSidebar = closeSidebar;
 
-    function scrollToSection(id) { const el = document.querySelector(id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    // التنقل السلس بين الأقسام
+    function scrollToSection(id) {
+        const el = document.querySelector(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
     window.scrollToSection = scrollToSection;
 
-    function toggleDropdown(id) {
-        const el = document.getElementById(id); const icon = document.getElementById(id + '-icon');
-        if (el.classList.contains('hidden')) { el.classList.remove('hidden'); el.classList.add('flex'); if(icon) icon.classList.add('rotate-180'); } 
-        else { el.classList.add('hidden'); el.classList.remove('flex'); if(icon) icon.classList.remove('rotate-180'); }
+    // نظام القوائم المنسدلة السريع جداً (Lightning Fast Dropdowns)
+    function toggleFastDropdown(id) {
+        const el = document.getElementById(id);
+        const icon = document.getElementById(id + '-icon');
+        
+        if (el.classList.contains('hidden')) {
+            // فتح القائمة بشكل فوري مع حركة الانزلاق
+            el.classList.remove('hidden');
+            el.classList.add('flex', 'animate-fast-slide');
+            if(icon) icon.classList.add('rotate');
+        } else {
+            // إغلاق القائمة فوراً
+            el.classList.add('hidden');
+            el.classList.remove('flex', 'animate-fast-slide');
+            if(icon) icon.classList.remove('rotate');
+        }
     }
-    window.toggleDropdown = toggleDropdown;
+    window.toggleFastDropdown = toggleFastDropdown;
 </script>
 
 </body>
