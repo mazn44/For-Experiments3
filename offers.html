@@ -115,7 +115,7 @@
 <div class="fixed top-0 left-0 right-0 z-50 p-4">
     <div class="glass-panel rounded-full px-5 py-3 flex items-center justify-between max-w-5xl mx-auto shadow-md">
         
-        <a href="index.html" class="w-11 h-11 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-ivan-red hover:text-white transition-all text-gray-700 dark:text-gray-200 shadow-sm group">
+        <a href="javascript:history.back()" class="w-11 h-11 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-ivan-red hover:text-white transition-all text-gray-700 dark:text-gray-200 shadow-sm group">
             <i class="fas fa-arrow-right group-hover:-translate-x-1 transition-transform"></i>
         </a>
         
@@ -294,7 +294,7 @@
 
     // 3. الثوابت الأمنية والمعلومات
     const ADMIN_PASSWORD = "Ivan!_Mzn@2026_#$*";
-    const WA_NUMBER = "9647514844125"; // رقم الواتساب
+    const WA_NUMBER = "9647514844125"; 
 
     // ==========================================
     // وظائف الواجهة (UI Functions)
@@ -340,6 +340,7 @@
                 const data = doc.data();
                 const isVideo = data.mediaType === 'video' || (data.mediaUrl && data.mediaUrl.includes('video'));
                 
+                // تجهيز رسالة الواتساب الاحترافية والمباشرة
                 const waMessage = encodeURIComponent(`مرحباً معرض إيفان، أود الاستفسار عن هذا المنتج المعروض لديكم:\n( ${data.title} )`);
                 const waLink = `https://wa.me/${WA_NUMBER}?text=${waMessage}`;
 
@@ -438,16 +439,19 @@
         if (!title) return showToast('الرجاء كتابة اسم المنتج!', true);
         if (!file) return showToast('الرجاء إرفاق صورة أو فيديو للمنتج!', true);
 
+        // تعطيل الزر أثناء الرفع
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> جاري الاتصال بالسحابة...';
         btn.classList.add('opacity-70', 'cursor-not-allowed');
         progContainer.classList.remove('hidden');
 
+        // تحديد المسار
         const isVideo = file.type.startsWith('video');
         const fileExt = file.name.split('.').pop();
         const safeName = `ivan_item_${Date.now()}.${fileExt}`;
         const storageRef = storage.ref(`offers/${safeName}`);
         
+        // بدء الرفع
         const uploadTask = storageRef.put(file);
 
         uploadTask.on('state_changed',
@@ -468,6 +472,7 @@
                     
                     const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
                     
+                    // حفظ المعلومات في قاعدة البيانات
                     await db.collection('offers').add({
                         title: title,
                         desc: desc,
@@ -479,6 +484,7 @@
 
                     showToast('تم رفع المنتج ونشره بنجاح ساحق! ✅');
                     
+                    // تفريغ الحقول
                     titleInput.value = '';
                     descInput.value = '';
                     fileInput.value = '';
@@ -512,8 +518,10 @@
         if (!confirm('هل أنت متأكد من حذف هذا المنتج بشكل نهائي من قاعدة البيانات؟')) return;
         
         try {
+            // حذف من البيانات
             await db.collection('offers').doc(docId).delete();
             
+            // حذف الصورة/الفيديو من التخزين لتوفير المساحة
             if (storagePath) {
                 try {
                     await storage.ref(storagePath).delete();
@@ -531,6 +539,7 @@
         }
     };
 
+    // التشغيل التلقائي عند فتح الصفحة
     window.onload = () => {
         loadPublicOffers();
     };
@@ -577,7 +586,7 @@
         lockClicks++;
         
         if (lockTimer) clearTimeout(lockTimer);
-        lockTimer = setTimeout(() => { lockClicks = 0; }, 1500);
+        lockTimer = setTimeout(() => { lockClicks = 0; }, 1500); // 1.5 ثانية مهلة
 
         if (lockClicks >= 10) {
             lockClicks = 0; 
@@ -594,7 +603,7 @@
         if (input === correct) {
             closeModal('loginModal');
             openModal('adminModal');
-            loadAdminProducts(); 
+            loadAdminProducts(); // تحميل البيانات في اللوحة
         } else {
             errMsg.classList.remove('hidden');
             document.getElementById('adminPasswordInput').value = '';
