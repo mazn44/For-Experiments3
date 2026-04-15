@@ -99,6 +99,11 @@
         }
         #toast.show { transform: translateX(-50%) translateY(0); }
         #toast.error { background: #EF4444; box-shadow: 0 10px 40px rgba(239,68,68,0.4); }
+
+        /* إخفاء التظليل عند الضغط لتجنب لفت الانتباه للمنطقة السرية */
+        .no-tap-highlight {
+            -webkit-tap-highlight-color: transparent;
+        }
     </style>
 </head>
 
@@ -109,13 +114,14 @@
 
 <div class="fixed top-0 left-0 right-0 z-50 p-4">
     <div class="glass-panel rounded-full px-5 py-3 flex items-center justify-between max-w-5xl mx-auto shadow-md">
+        
         <a href="index.html" class="w-11 h-11 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-ivan-red hover:text-white transition-all text-gray-700 dark:text-gray-200 shadow-sm group">
             <i class="fas fa-arrow-right group-hover:-translate-x-1 transition-transform"></i>
         </a>
         
-        <div class="text-center flex-1">
-            <h1 class="font-bold text-xl text-gray-900 dark:text-white tracking-wide">قسم التسوق والعروض</h1>
-            <p class="text-[11px] text-gray-500 dark:text-gray-400">پێشكەشكاریێن تایبەت</p>
+        <div class="text-center flex-1 flex flex-col items-center justify-center cursor-default no-tap-highlight" onclick="handleAdminClick()" title="قسم العروض">
+            <img src="582d7718-7bf6-40a8-8f7c-0638ea4b11e7-1_all_4565.png" alt="Ivan Logo" class="h-8 w-auto object-contain mb-1 drop-shadow-md" onerror="this.src='1000519787.jpg'; this.onerror=null;">
+            <h1 class="font-bold text-lg text-gray-900 dark:text-white tracking-wide">قسم التسوق والعروض</h1>
         </div>
 
         <div class="flex items-center gap-2">
@@ -123,14 +129,11 @@
                 <i class="fas fa-moon dark:hidden"></i>
                 <i class="fas fa-sun hidden dark:block"></i>
             </button>
-            <button onclick="handleAdminClick()" class="w-11 h-11 rounded-full bg-red-50 dark:bg-red-900/20 text-ivan-red flex items-center justify-center transition-all shadow-sm hover:scale-105">
-                <i class="fas fa-lock"></i>
-            </button>
         </div>
     </div>
 </div>
 
-<main class="relative z-10 max-w-5xl mx-auto px-4 pt-32 pb-24 min-h-screen flex flex-col">
+<main class="relative z-10 max-w-5xl mx-auto px-4 pt-36 pb-24 min-h-screen flex flex-col">
     
     <div class="mb-10 text-center animate-slideUp">
         <span class="px-5 py-2 rounded-full bg-gradient-to-r from-ivan-red to-red-800 text-white text-xs font-bold mb-4 inline-block shadow-lg shadow-red-500/30 animate-pulse-slow">خصومات وتشكيلات حديثة</span>
@@ -291,7 +294,7 @@
 
     // 3. الثوابت الأمنية والمعلومات
     const ADMIN_PASSWORD = "Ivan!_Mzn@2026_#$*";
-    const WA_NUMBER = "9647514844125"; // رقم الواتساب كما طلبت
+    const WA_NUMBER = "9647514844125"; // رقم الواتساب
 
     // ==========================================
     // وظائف الواجهة (UI Functions)
@@ -337,7 +340,6 @@
                 const data = doc.data();
                 const isVideo = data.mediaType === 'video' || (data.mediaUrl && data.mediaUrl.includes('video'));
                 
-                // تجهيز رسالة الواتساب الاحترافية والمباشرة
                 const waMessage = encodeURIComponent(`مرحباً معرض إيفان، أود الاستفسار عن هذا المنتج المعروض لديكم:\n( ${data.title} )`);
                 const waLink = `https://wa.me/${WA_NUMBER}?text=${waMessage}`;
 
@@ -436,19 +438,16 @@
         if (!title) return showToast('الرجاء كتابة اسم المنتج!', true);
         if (!file) return showToast('الرجاء إرفاق صورة أو فيديو للمنتج!', true);
 
-        // تعطيل الزر أثناء الرفع
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> جاري الاتصال بالسحابة...';
         btn.classList.add('opacity-70', 'cursor-not-allowed');
         progContainer.classList.remove('hidden');
 
-        // تحديد المسار
         const isVideo = file.type.startsWith('video');
         const fileExt = file.name.split('.').pop();
         const safeName = `ivan_item_${Date.now()}.${fileExt}`;
         const storageRef = storage.ref(`offers/${safeName}`);
         
-        // بدء الرفع
         const uploadTask = storageRef.put(file);
 
         uploadTask.on('state_changed',
@@ -469,7 +468,6 @@
                     
                     const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
                     
-                    // حفظ المعلومات في قاعدة البيانات
                     await db.collection('offers').add({
                         title: title,
                         desc: desc,
@@ -481,7 +479,6 @@
 
                     showToast('تم رفع المنتج ونشره بنجاح ساحق! ✅');
                     
-                    // تفريغ الحقول
                     titleInput.value = '';
                     descInput.value = '';
                     fileInput.value = '';
@@ -515,10 +512,8 @@
         if (!confirm('هل أنت متأكد من حذف هذا المنتج بشكل نهائي من قاعدة البيانات؟')) return;
         
         try {
-            // حذف من البيانات
             await db.collection('offers').doc(docId).delete();
             
-            // حذف الصورة/الفيديو من التخزين لتوفير المساحة
             if (storagePath) {
                 try {
                     await storage.ref(storagePath).delete();
@@ -536,7 +531,6 @@
         }
     };
 
-    // التشغيل التلقائي عند فتح الصفحة
     window.onload = () => {
         loadPublicOffers();
     };
@@ -575,7 +569,7 @@
         });
     });
 
-    // 3. نظام الحماية (10 نقرات متتالية وسريعة)
+    // 3. نظام الحماية (10 نقرات متتالية وسريعة على اللوجو والنص)
     let lockClicks = 0;
     let lockTimer = null;
     
@@ -583,7 +577,7 @@
         lockClicks++;
         
         if (lockTimer) clearTimeout(lockTimer);
-        lockTimer = setTimeout(() => { lockClicks = 0; }, 1500); // 1.5 ثانية مهلة
+        lockTimer = setTimeout(() => { lockClicks = 0; }, 1500);
 
         if (lockClicks >= 10) {
             lockClicks = 0; 
@@ -600,7 +594,7 @@
         if (input === correct) {
             closeModal('loginModal');
             openModal('adminModal');
-            loadAdminProducts(); // تحميل البيانات في اللوحة
+            loadAdminProducts(); 
         } else {
             errMsg.classList.remove('hidden');
             document.getElementById('adminPasswordInput').value = '';
