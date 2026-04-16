@@ -2,1028 +2,337 @@
 <html lang="ar" dir="rtl" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>العروض الحصرية | معرض إيفان</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ivan shuw | العروض</title>
+    <meta name="description" content="أثاث جديد ومستعمل بأسعار مميزة. تابع قنواتنا الرسمية.">
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!--
-    ╔══════════════════════════════════════════════════╗
-    ║  FIREBASE RULES — الصق هذا في Firebase Console  ║
-    ║                                                  ║
-    ║  Firestore Rules:                                ║
-    ║  rules_version = '2';                            ║
-    ║  service cloud.firestore {                       ║
-    ║    match /databases/{database}/documents {       ║
-    ║      match /{document=**} {                      ║
-    ║        allow read, write: if true;               ║
-    ║      }                                           ║
-    ║    }                                             ║
-    ║  }                                               ║
-    ║                                                  ║
-    ║  Storage Rules:                                  ║
-    ║  rules_version = '2';                            ║
-    ║  service firebase.storage {                      ║
-    ║    match /b/{bucket}/o {                         ║
-    ║      match /{allPaths=**} {                      ║
-    ║        allow read, write: if true;               ║
-    ║      }                                           ║
-    ║    }                                             ║
-    ║  }                                               ║
-    ╚══════════════════════════════════════════════════╝
-    -->
-
-    <!-- Firebase v9 Compat — الأكثر استقراراً مع CDN -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-
+    
     <script>
-    tailwind.config = {
-        darkMode:'class',
-        theme:{extend:{
-            fontFamily:{ tajawal:['Tajawal','sans-serif'], outfit:['Outfit','sans-serif'] },
-            colors:{ ivan:{ red:'#B11216', gold:'#D4AF37' } },
-            animation:{
-                'float':'float 7s ease-in-out infinite',
-                'fadeUp':'fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) both',
-                'fadeIn':'fadeIn 0.4s ease both',
-                'spin-slow':'spin 1.8s linear infinite',
-                'pulse-slow':'pulse 2.5s ease-in-out infinite',
-                'shimmer':'shimmer 1.6s ease-in-out infinite',
-            },
-            keyframes:{
-                float:{'0%,100%':{transform:'translateY(0)'},'50%':{transform:'translateY(-14px)'}},
-                fadeUp:{from:{opacity:'0',transform:'translateY(30px)'},to:{opacity:'1',transform:'translateY(0)'}},
-                fadeIn:{from:{opacity:'0'},to:{opacity:'1'}},
-                shimmer:{'0%':{backgroundPosition:'-200% 0'},'100%':{backgroundPosition:'200% 0'}},
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        tajawal: ['Tajawal', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif']
+                    },
+                    colors: {
+                        ivan: { red: '#B11216', gold: '#D4AF37' }
+                    },
+                    animation: {
+                        'float': 'float 7s ease-in-out infinite',
+                        'fadeUp': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both',
+                        'fadeIn': 'fadeIn 0.5s ease both',
+                        'pulse-slow': 'pulse 2.5s ease-in-out infinite',
+                        'shimmer': 'shimmer 1.6s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-14px)' } },
+                        fadeUp: { from: { opacity: '0', transform: 'translateY(30px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+                        fadeIn: { from: { opacity: '0' }, to: { opacity: '1' } },
+                        shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } }
+                    }
+                }
             }
-        }}
-    }
+        }
     </script>
 
     <style>
-    :root { --red:#B11216; --gold:#D4AF37; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { background: #0f1117; scroll-behavior: smooth; }
+        body {
+            background: radial-gradient(circle at 10% 20%, #0f1117, #0a0c12);
+            min-height: 100vh;
+            font-family: 'Tajawal', sans-serif;
+            transition: background 0.3s ease, color 0.2s ease;
+        }
+        html:not(.dark) body {
+            background: radial-gradient(circle at 10% 20%, #f8fafc, #eef2f9);
+        }
 
-    /* ── PAGE ── */
-    html { background:#0f1117; }
-    body {
-        background: linear-gradient(145deg,#0f1117 0%,#131920 50%,#0f1117 100%);
-        min-height:100vh;
-        color:#e2e8f0;
-    }
-    html:not(.dark) body {
-        background: linear-gradient(145deg,#edf2f7 0%,#dce6f2 60%,#edf2f7 100%);
-        color:#1a1a2e;
-    }
-    html:not(.dark) { background:#edf2f7; }
+        .glass {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(18px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        html:not(.dark) .glass {
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        }
 
-    /* ── GLASS ── */
-    .glass {
-        background:rgba(255,255,255,0.05);
-        backdrop-filter:blur(22px) saturate(160%);
-        -webkit-backdrop-filter:blur(22px) saturate(160%);
-        border:1px solid rgba(255,255,255,0.08);
-        box-shadow:0 8px 32px rgba(0,0,0,0.45);
-    }
-    html:not(.dark) .glass {
-        background:rgba(255,255,255,0.85);
-        border:1px solid rgba(255,255,255,0.7);
-        box-shadow:0 8px 32px rgba(0,0,0,0.06);
-    }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #B11216; border-radius: 12px; }
 
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar{width:5px;height:5px}
-    ::-webkit-scrollbar-thumb{background:var(--red);border-radius:10px}
-    ::-webkit-scrollbar-track{background:transparent}
+        .product-card {
+            border-radius: 26px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: fadeUp 0.55s ease both;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        html:not(.dark) .product-card {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(0, 0, 0, 0.05);
+        }
+        .product-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(177, 18, 22, 0.5);
+        }
+        .media-wrap {
+            height: 240px;
+            background: #10131f;
+            position: relative;
+            overflow: hidden;
+        }
+        .media-el {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .media-el {
+            transform: scale(1.06);
+        }
+        .media-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #B11216cc;
+            backdrop-filter: blur(6px);
+            padding: 4px 12px;
+            border-radius: 60px;
+            font-size: 10px;
+            font-weight: 800;
+            color: white;
+            z-index: 3;
+        }
 
-    /* ── CARD ── */
-    .product-card {
-        border-radius:22px; overflow:hidden;
-        display:flex; flex-direction:column;
-        transition:transform 0.38s cubic-bezier(0.16,1,0.3,1),box-shadow 0.38s ease;
-        border:1px solid rgba(255,255,255,0.07);
-        animation:fadeUp 0.55s ease both;
-    }
-    html:not(.dark) .product-card{border-color:rgba(0,0,0,0.06)}
-    .product-card:hover{transform:translateY(-9px) scale(1.01);box-shadow:0 28px 55px rgba(0,0,0,0.3),0 0 0 2px rgba(177,18,22,0.3)}
-    .media-wrap{height:280px;overflow:hidden;flex-shrink:0;background:#1a2030;position:relative}
-    html:not(.dark) .media-wrap{background:#dde6f0}
-    .media-el{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.6s ease}
-    .product-card:hover .media-el{transform:scale(1.07)}
-    .media-badge{position:absolute;top:12px;right:12px;z-index:3;padding:4px 12px;border-radius:50px;font-size:11px;font-weight:700;color:white}
+        .channel-card {
+            border-radius: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .channel-card:hover {
+            transform: translateY(-8px);
+        }
 
-    /* ── MODAL ── */
-    .modal-overlay{
-        position:fixed;inset:0;z-index:700;
-        background:rgba(0,0,0,0.78);
-        backdrop-filter:blur(14px);
-        -webkit-backdrop-filter:blur(14px);
-        display:flex;align-items:center;justify-content:center;padding:16px;
-        opacity:0;pointer-events:none;transition:opacity 0.3s ease;
-    }
-    .modal-overlay.active{opacity:1;pointer-events:all}
-    .modal-box{
-        background:#12131e;border:1px solid rgba(255,255,255,0.09);
-        border-radius:26px;width:100%;max-width:500px;
-        max-height:92vh;overflow-y:auto;padding:30px;
-        box-shadow:0 40px 100px rgba(0,0,0,0.65);
-        transform:translateY(20px) scale(0.96);
-        transition:transform 0.36s cubic-bezier(0.34,1.56,0.64,1);
-    }
-    html:not(.dark) .modal-box{background:#fff;border-color:rgba(0,0,0,0.07);color:#1a1a2e}
-    .modal-overlay.active .modal-box{transform:translateY(0) scale(1)}
-    .modal-wide{max-width:900px}
-
-    /* ── FILTER PILL ── */
-    .f-pill{
-        padding:8px 22px;border-radius:50px;font-weight:700;font-size:13px;
-        cursor:pointer;transition:all 0.22s;border:2px solid transparent;
-        white-space:nowrap;color:#666;background:rgba(255,255,255,0.05);
-    }
-    html:not(.dark) .f-pill{background:rgba(0,0,0,0.05);color:#555}
-    .f-pill.on{background:var(--red);color:white;box-shadow:0 4px 16px rgba(177,18,22,0.4)}
-    .f-pill:not(.on):hover{border-color:var(--red);color:var(--red)}
-
-    /* ── DROP ZONE ── */
-    .drop-zone{
-        border:2px dashed rgba(255,255,255,0.12);border-radius:18px;
-        cursor:pointer;transition:all 0.25s;
-    }
-    html:not(.dark) .drop-zone{border-color:rgba(0,0,0,0.12)}
-    .drop-zone:hover,.drop-zone.over{border-color:var(--red);background:rgba(177,18,22,0.06)}
-
-    /* ── PROGRESS ── */
-    .prog-track{background:rgba(255,255,255,0.07);border-radius:50px;height:8px;overflow:hidden}
-    html:not(.dark) .prog-track{background:rgba(0,0,0,0.07)}
-    .prog-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,#B11216,#ff5858);transition:width 0.35s ease;width:0%}
-    .prog-fill.done{background:linear-gradient(90deg,#10B981,#34d399)}
-    .prog-fill.anim{background:linear-gradient(90deg,#B11216 0%,#ff8c8c 50%,#B11216 100%);background-size:200% 100%;animation:shimmer 1.5s ease-in-out infinite}
-
-    /* ── TOAST ── */
-    #toast{
-        position:fixed;bottom:24px;left:50%;
-        transform:translateX(-50%) translateY(120px);
-        padding:13px 24px;border-radius:50px;color:white;
-        font-weight:700;font-size:14px;z-index:999;
-        display:flex;align-items:center;gap:9px;
-        box-shadow:0 10px 35px rgba(0,0,0,0.3);
-        transition:transform 0.42s cubic-bezier(0.16,1,0.3,1);
-        white-space:nowrap;max-width:88vw;background:#10B981;
-    }
-    #toast.show{transform:translateX(-50%) translateY(0)}
-    #toast.err{background:#EF4444}
-    #toast.warn{background:#F59E0B}
-
-    /* ── CARD DELAYS ── */
-    .d0{animation-delay:0ms}.d1{animation-delay:75ms}.d2{animation-delay:150ms}
-    .d3{animation-delay:225ms}.d4{animation-delay:300ms}.d5{animation-delay:375ms}
-
-    /* ── DIAGNOSTIC ── */
-    .diag-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;font-size:13px;font-weight:600;margin-bottom:6px}
-    .diag-ok{background:rgba(16,185,129,0.12);color:#10B981}
-    .diag-fail{background:rgba(239,68,68,0.12);color:#EF4444}
-    .diag-wait{background:rgba(255,255,255,0.04);color:#666}
-
-    /* ── SKELETON ── */
-    .skel{background:linear-gradient(90deg,rgba(255,255,255,0.04) 0%,rgba(255,255,255,0.09) 50%,rgba(255,255,255,0.04) 100%);background-size:200% 100%;animation:shimmer 1.5s ease-in-out infinite;border-radius:10px}
-    html:not(.dark) .skel{background:linear-gradient(90deg,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.1) 50%,rgba(0,0,0,0.05) 100%);background-size:200% 100%}
-
-    /* ── INPUT ── */
-    .ivan-in{
-        width:100%;border:2px solid rgba(255,255,255,0.08);
-        background:rgba(255,255,255,0.04);border-radius:14px;
-        padding:12px 16px;font-size:14px;color:white;
-        outline:none;transition:all 0.22s;font-family:'Tajawal',sans-serif;
-    }
-    html:not(.dark) .ivan-in{border-color:rgba(0,0,0,0.1);background:rgba(0,0,0,0.03);color:#1a1a2e}
-    .ivan-in:focus{border-color:var(--red);background:rgba(177,18,22,0.04)}
-    .ivan-in::placeholder{color:rgba(255,255,255,0.25)}
-    html:not(.dark) .ivan-in::placeholder{color:rgba(0,0,0,0.28)}
-
-    /* ── NTL ── */
-    .ntl{-webkit-tap-highlight-color:transparent;user-select:none}
-
-    /* ── TOP BAR ── */
-    .top-bar{position:fixed;top:0;left:0;right:0;z-index:300;padding:10px 16px}
-    .top-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:10px 20px}
-
-    /* ── PREVIEW ── */
-    #previewWrap{display:none;margin-top:10px;border-radius:14px;overflow:hidden}
-    #previewWrap.show{display:block}
-
-    /* ── WA BUTTON ── */
-    .wa-btn{
-        background:linear-gradient(135deg,#25D366,#128C7E);
-        box-shadow:0 4px 20px rgba(37,211,102,0.25);
-    }
-    .wa-btn:hover{box-shadow:0 8px 30px rgba(37,211,102,0.4);transform:translateY(-2px)}
+        .toast-msg {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #10B981;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 60px;
+            font-weight: bold;
+            z-index: 999;
+            transition: transform 0.35s ease;
+            white-space: nowrap;
+            font-size: 13px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .toast-msg.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 
-<body class="font-tajawal transition-colors duration-500">
-<script>
-    /* Apply saved theme instantly */
-    (function(){
-        const s = localStorage.getItem('ivan-theme');
-        const h = document.documentElement;
-        if(s === 'light') h.classList.remove('dark');
-        else h.classList.add('dark');
-    })();
-</script>
+<body class="font-tajawal transition-colors duration-300">
 
-<!-- BG Orbs -->
-<div class="fixed top-[-80px] right-[-80px] w-[450px] h-[450px] rounded-full pointer-events-none opacity-25 animate-float" style="background:radial-gradient(circle,#B11216 0%,transparent 70%);filter:blur(70px)"></div>
-<div class="fixed bottom-[-80px] left-[-80px] w-[400px] h-[400px] rounded-full pointer-events-none opacity-10 animate-float" style="background:radial-gradient(circle,#3b82f6 0%,transparent 70%);filter:blur(90px);animation-delay:3.5s"></div>
+    <!-- كرات خلفية متحركة -->
+    <div class="fixed top-[-100px] right-[-100px] w-[500px] h-[500px] rounded-full pointer-events-none opacity-20 animate-float" style="background: radial-gradient(circle, #B11216, transparent 70%); filter: blur(80px);"></div>
+    <div class="fixed bottom-[-100px] left-[-100px] w-[450px] h-[450px] rounded-full pointer-events-none opacity-10 animate-float" style="background: radial-gradient(circle, #2563eb, transparent 70%); filter: blur(90px); animation-delay: 4s;"></div>
 
-<!-- ═══════════ TOP BAR ═══════════ -->
-<header class="top-bar">
-    <div class="glass top-in rounded-2xl">
-
-        <a href="index.html"
-           class="w-11 h-11 rounded-full flex items-center justify-center border border-white/10 dark:border-white/10 hover:border-red-500/40 hover:bg-red-500/10 transition-all text-gray-400 hover:text-red-400">
-            <i class="fas fa-arrow-right"></i>
-        </a>
-
-        <div class="text-center flex-1 flex flex-col items-center ntl" onclick="handleAdminTap()">
-            <img src="582d7718-7bf6-40a8-8f7c-0638ea4b11e7-1_all_4565.png" alt="Ivan"
-                 class="h-8 w-auto object-contain mb-0.5 drop-shadow-lg"
-                 onerror="this.src='1000519787.jpg';this.onerror=null">
-            <h1 class="font-extrabold text-sm tracking-wide dark:text-white text-gray-900 leading-none">العروض الحصرية</h1>
-            <p class="text-[9px] text-gray-500 mt-0.5">پێشكەشكاریێن تایبەت</p>
-        </div>
-
-        <div class="flex items-center gap-2">
-            <span id="badge" class="hidden px-3 py-1 bg-ivan-red text-white text-xs font-bold rounded-full font-outfit animate-pulse-slow shadow-lg shadow-red-500/25"></span>
-            <button id="themeBtn" class="w-11 h-11 rounded-full border border-white/10 flex items-center justify-center hover:scale-110 transition-all">
-                <i class="fas fa-sun text-yellow-400 dark:block hidden"></i>
-                <i class="fas fa-moon text-gray-400 dark:hidden block"></i>
+    <!-- الشريط العلوي -->
+    <header class="fixed top-0 left-0 right-0 z-50 px-4 pt-3">
+        <div class="glass max-w-6xl mx-auto rounded-2xl px-5 py-3 flex items-center justify-between backdrop-blur-xl">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="w-11 h-11 rounded-full glass flex items-center justify-center text-gray-400 hover:text-ivan-red transition-all" title="الرئيسية">
+                    <i class="fas fa-arrow-right text-lg"></i>
+                </a>
+                <span class="font-black text-xl outfit tracking-tight dark:text-white text-gray-800">ivan shuw</span>
+            </div>
+            <div class="hidden md:block text-center">
+                <p class="text-[10px] font-bold text-ivan-red">پێشەنگی جوانی</p>
+            </div>
+            <button id="themeToggle" class="w-10 h-10 rounded-full glass flex items-center justify-center text-xl hover:scale-110 transition-all">
+                <i class="fas fa-moon dark:text-yellow-400 text-gray-600"></i>
             </button>
         </div>
+    </header>
 
-    </div>
-</header>
+    <main class="max-w-6xl mx-auto px-5 pt-24 pb-20">
 
-<!-- ═══════════ MAIN ═══════════ -->
-<main class="relative z-10 max-w-6xl mx-auto px-4 pt-32 pb-20 min-h-screen flex flex-col">
+        <!-- عنوان بسيط -->
+        <div class="text-center mb-10 animate-fadeUp">
+            <h1 class="text-3xl md:text-4xl font-black dark:text-white text-gray-900 mb-2">أثاث جديد ومستعمل</h1>
+            <p class="text-gray-500 max-w-lg mx-auto text-sm">جودة عالية – أسعار منافسة – توصيل سريع</p>
+            <p class="text-[10px] text-ivan-red font-bold mt-1">Kêşf bikin çêtirîn hilberên Ivan Showroom</p>
+        </div>
 
-    <!-- Hero -->
-    <div class="mb-10 text-center animate-fadeUp">
-        <span class="inline-block px-5 py-2 rounded-full bg-gradient-to-r from-ivan-red to-red-900 text-white text-xs font-bold mb-4 shadow-lg shadow-red-500/25 animate-pulse-slow">
-            ✨ تشكيلات حصرية 2026
-        </span>
-        <h2 class="text-3xl md:text-4xl font-black dark:text-white text-gray-900 mb-3 tracking-tight">
-            تسوّق أفخر موديلاتنا
-        </h2>
-        <p class="text-sm text-gray-500 max-w-lg mx-auto leading-relaxed font-medium">
-            اكتشف أحدث قطع الأثاث الراقية من معرض إيفان — صور حقيقية، جودة أصلية، خدمة مميزة.
-        </p>
-        <p class="text-[10px] text-gray-600 mt-1.5">Kêşf bikin çêtirîn hilberên Ivan Showroom</p>
-    </div>
-
-    <!-- Filters -->
-    <div class="flex items-center gap-3 mb-8 overflow-x-auto pb-1" style="scrollbar-width:none">
-        <button class="f-pill on" onclick="setFilter('all',this)"><i class="fas fa-th ml-1 text-xs"></i> الكل</button>
-        <button class="f-pill" onclick="setFilter('image',this)"><i class="fas fa-image ml-1 text-xs"></i> صور</button>
-        <button class="f-pill" onclick="setFilter('video',this)"><i class="fas fa-video ml-1 text-xs"></i> فيديو</button>
-    </div>
-
-    <!-- Grid -->
-    <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 flex-1">
-        <!-- Skeletons -->
-        <div class="product-card glass d0">
-            <div class="skel" style="height:280px"></div>
-            <div class="p-5 space-y-3">
-                <div class="skel h-5 w-3/4"></div>
-                <div class="skel h-4 w-full"></div>
-                <div class="skel h-4 w-1/2"></div>
-                <div class="skel h-12 rounded-2xl mt-3"></div>
+        <!-- قنوات التواصل (واضحة وكبيرة) -->
+        <div class="mb-16">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-black dark:text-white text-gray-800">قنوات إيفان الرسمية</h2>
+                <div class="w-20 h-1 bg-ivan-red mx-auto mt-2 rounded-full"></div>
             </div>
-        </div>
-        <div class="product-card glass d1 hidden sm:flex flex-col">
-            <div class="skel" style="height:280px"></div>
-            <div class="p-5 space-y-3">
-                <div class="skel h-5 w-2/3"></div>
-                <div class="skel h-4 w-full"></div>
-                <div class="skel h-12 rounded-2xl mt-3"></div>
-            </div>
-        </div>
-        <div class="product-card glass d2 hidden lg:flex flex-col">
-            <div class="skel" style="height:280px"></div>
-            <div class="p-5 space-y-3">
-                <div class="skel h-5 w-3/4"></div>
-                <div class="skel h-4 w-full"></div>
-                <div class="skel h-12 rounded-2xl mt-3"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Rules Hint -->
-    <div id="rulesHint" class="hidden mt-8 p-5 bg-amber-500/10 border border-amber-500/25 rounded-2xl max-w-xl mx-auto text-right">
-        <p class="font-bold text-amber-400 mb-2 text-sm flex items-center gap-2">
-            <i class="fas fa-triangle-exclamation"></i> Firebase Rules تحتاج تفعيل
-        </p>
-        <ul class="text-xs text-amber-400/80 space-y-1.5 list-disc list-inside leading-relaxed">
-            <li>افتح <b>Firebase Console</b> → مشروعك → <b>Firestore Database</b> → <b>Rules</b></li>
-            <li>غيّر <code class="bg-red-900/40 px-1 rounded text-[11px]">false</code> إلى <code class="bg-green-900/40 text-green-400 px-1 rounded text-[11px]">true</code> ثم اضغط <b>Publish</b></li>
-            <li>كرّر نفس الشيء في <b>Storage → Rules</b></li>
-        </ul>
-    </div>
-
-</main>
-
-<!-- ═══════════ LOGIN MODAL ═══════════ -->
-<div id="loginModal" class="modal-overlay">
-    <div class="modal-box relative">
-        <button onclick="closeModal('loginModal')"
-            class="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/05 hover:bg-red-500/20 hover:text-red-400 flex items-center justify-center transition-all text-gray-500">
-            <i class="fas fa-times"></i>
-        </button>
-
-        <div class="text-center mb-7 mt-2">
-            <div class="w-20 h-20 rounded-[20px] bg-gradient-to-br from-red-600 to-red-950 flex items-center justify-center text-white text-3xl mx-auto mb-4 shadow-xl shadow-red-900/50">
-                <i class="fas fa-user-shield"></i>
-            </div>
-            <h3 class="text-xl font-black dark:text-white text-gray-900">بوابة الإدارة</h3>
-            <p class="text-xs text-gray-500 mt-1">للمسؤول فقط — تەنها ji bo rêveber</p>
-        </div>
-
-        <div class="relative mb-4">
-            <i class="fas fa-key absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
-            <input type="password" id="pwdInput" placeholder="كلمة المرور السرية..."
-                class="ivan-in pr-11 text-base" onkeydown="if(event.key==='Enter')checkPwd()">
-        </div>
-
-        <button onclick="checkPwd()"
-            class="w-full py-4 bg-gradient-to-r from-ivan-red to-red-900 hover:from-red-700 hover:to-red-950 text-white rounded-2xl font-black text-base transition-all shadow-lg hover:shadow-red-500/30 hover:-translate-y-0.5 flex items-center justify-center gap-2">
-            <i class="fas fa-sign-in-alt"></i> دخول
-        </button>
-
-        <p id="pwdErr" class="hidden text-red-400 text-sm font-bold text-center mt-4 py-3 bg-red-500/10 rounded-xl border border-red-500/20">
-            <i class="fas fa-times-circle ml-1"></i> كلمة المرور غير صحيحة
-        </p>
-    </div>
-</div>
-
-<!-- ═══════════ ADMIN MODAL ═══════════ -->
-<div id="adminModal" class="modal-overlay">
-    <div class="modal-box modal-wide relative">
-
-        <div class="flex items-center justify-between border-b border-white/06 pb-5 mb-5">
-            <div>
-                <h3 class="text-lg font-black dark:text-white text-gray-900 flex items-center gap-2">
-                    <span class="w-8 h-8 rounded-lg bg-ivan-red flex items-center justify-center text-sm text-white"><i class="fas fa-server"></i></span>
-                    لوحة التحكم السحابية
-                </h3>
-                <p class="text-xs text-gray-600 mt-0.5">رفع وإدارة المنتجات — مزامنة فورية مع Firebase</p>
-            </div>
-            <button onclick="closeModal('adminModal')"
-                class="w-10 h-10 rounded-full bg-white/05 hover:bg-red-500/20 hover:text-red-400 flex items-center justify-center transition-all text-gray-500">
-                <i class="fas fa-times text-lg"></i>
-            </button>
-        </div>
-
-        <!-- Diagnostics -->
-        <div id="diagPanel" class="mb-5 p-4 rounded-xl border border-white/05 bg-white/02">
-            <p class="text-xs font-bold text-gray-600 mb-3 flex items-center gap-1.5"><i class="fas fa-stethoscope"></i> تشخيص الاتصال بالسحابة</p>
-            <div class="diag-row diag-wait" id="d-init"><i class="fas fa-circle-notch fa-spin text-sm"></i> تهيئة Firebase...</div>
-            <div class="diag-row diag-wait" id="d-fs"><i class="fas fa-circle-notch fa-spin text-sm"></i> اختبار Firestore...</div>
-            <div class="diag-row diag-wait" id="d-st"><i class="fas fa-circle-notch fa-spin text-sm"></i> اختبار Storage...</div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-5">
-
-            <!-- Upload -->
-            <div class="lg:col-span-2 rounded-xl border border-white/06 bg-white/02 p-5 h-fit">
-                <h4 class="font-bold dark:text-white text-gray-900 mb-4 text-sm flex items-center gap-2">
-                    <i class="fas fa-cloud-upload-alt text-green-400"></i> إضافة منتج جديد
-                </h4>
-
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1.5">اسم المنتج <span class="text-red-500">*</span></label>
-                        <input type="text" id="offerTitle" placeholder="مثال: غرفة نوم فاخرة..." class="ivan-in">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- تلجرام -->
+                <a href="https://t.me/m3rdevan1" target="_blank" class="channel-card glass p-6 rounded-3xl text-center group border-b-4 border-telegram hover:shadow-xl transition-all">
+                    <div class="w-20 h-20 mx-auto bg-telegram/20 rounded-full flex items-center justify-center group-hover:bg-telegram transition-all mb-4">
+                        <i class="fab fa-telegram text-4xl text-telegram group-hover:text-white"></i>
                     </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1.5">الوصف والسعر</label>
-                        <textarea id="offerDesc" placeholder="السعر، المقاس، التفاصيل..." rows="3" class="ivan-in resize-none"></textarea>
+                    <h3 class="text-2xl font-bold mb-1">تلجرام إيفان</h3>
+                    <p class="text-sm opacity-70">أسرع العروض والصور المباشرة</p>
+                    <span class="inline-block mt-5 px-6 py-2 rounded-full font-bold transition-all join-btn">انضم إلينا</span>
+                </a>
+                <!-- واتساب -->
+                <a href="https://whatsapp.com/channel/0029VaGseOMCBtxFq5XFBs1Q" target="_blank" class="channel-card glass p-6 rounded-3xl text-center group border-b-4 border-whatsapp hover:shadow-xl transition-all">
+                    <div class="w-20 h-20 mx-auto bg-whatsapp/20 rounded-full flex items-center justify-center group-hover:bg-whatsapp transition-all mb-4">
+                        <i class="fab fa-whatsapp text-4xl text-whatsapp group-hover:text-white"></i>
                     </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1.5">الملف <span class="text-red-500">*</span></label>
-                        <div class="drop-zone p-5 text-center"
-                             id="dropZone"
-                             onclick="document.getElementById('fileInput').click()"
-                             ondragover="event.preventDefault();this.classList.add('over')"
-                             ondragleave="this.classList.remove('over')"
-                             ondrop="onDrop(event)">
-                            <div class="w-14 h-14 rounded-2xl bg-white/05 flex items-center justify-center mx-auto mb-2.5 transition-all">
-                                <i class="fas fa-photo-video text-2xl text-gray-500"></i>
-                            </div>
-                            <p id="fileName" class="text-sm font-bold text-gray-400 mb-1">اضغط أو اسحب الملف هنا</p>
-                            <p class="text-[10px] text-gray-600">JPG · PNG · WEBP · MP4 · MOV</p>
-                            <input type="file" id="fileInput" accept="image/*,video/*" class="hidden" onchange="onFilePick(this)">
-                        </div>
-                        <div id="previewWrap">
-                            <img id="previewImg" src="" alt="" class="w-full rounded-xl object-cover" style="max-height:150px">
-                            <div id="previewVid" class="hidden p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-center gap-3 mt-2">
-                                <i class="fas fa-film text-blue-400 text-xl"></i>
-                                <div>
-                                    <p id="previewVidName" class="text-sm font-bold text-blue-300 truncate"></p>
-                                    <p class="text-[10px] text-gray-600">فيديو جاهز للرفع</p>
-                                </div>
-                            </div>
-                        </div>
+                    <h3 class="text-2xl font-bold mb-1">واتساب إيفان</h3>
+                    <p class="text-sm opacity-70">عروض يومية حصرية على هاتفك</p>
+                    <span class="inline-block mt-5 px-6 py-2 rounded-full font-bold transition-all join-btn">انضم إلينا</span>
+                </a>
+                <!-- فايبر -->
+                <a href="https://invite.viber.com/?g2=AQBAnpyXnfZiqVNozOdrbdXq%2BHlVuL29VDfcVIRFD2udxAPKXDfvmGDPXKOgc0Oh" target="_blank" class="channel-card glass p-6 rounded-3xl text-center group border-b-4 border-viber hover:shadow-xl transition-all">
+                    <div class="w-20 h-20 mx-auto bg-viber/20 rounded-full flex items-center justify-center group-hover:bg-viber transition-all mb-4">
+                        <i class="fab fa-viber text-4xl text-viber group-hover:text-white"></i>
                     </div>
-
-                    <!-- Progress Bar -->
-                    <div id="progWrap" class="hidden p-4 rounded-xl bg-white/03 border border-white/06 space-y-2">
-                        <div class="flex items-center justify-between">
-                            <span id="progLabel" class="text-xs font-bold text-gray-500 flex items-center gap-1.5">
-                                <i class="fas fa-spinner fa-spin text-ivan-red text-xs"></i> جارٍ الرفع...
-                            </span>
-                            <span id="progPct" class="text-xs font-black text-ivan-red font-outfit">0%</span>
-                        </div>
-                        <div class="prog-track">
-                            <div id="progFill" class="prog-fill"></div>
-                        </div>
-                        <p id="progSub" class="text-[10px] text-gray-600 text-center">تحضير...</p>
-                    </div>
-
-                    <button id="uploadBtn" onclick="doUpload()"
-                        class="w-full py-4 font-black text-sm rounded-2xl transition-all flex items-center justify-center gap-2 shadow-lg hover:-translate-y-0.5 text-white"
-                        style="background:linear-gradient(135deg,#1e1e2e,#2d2d44);border:1px solid rgba(255,255,255,0.09)">
-                        <i class="fas fa-paper-plane"></i> نشر المنتج الآن
-                    </button>
-                </div>
-            </div>
-
-            <!-- List -->
-            <div class="lg:col-span-3 flex flex-col">
-                <div class="flex items-center justify-between mb-3">
-                    <h4 class="font-bold dark:text-white text-gray-900 text-sm flex items-center gap-2">
-                        <i class="fas fa-layer-group text-blue-400"></i> المنتجات الحالية
-                    </h4>
-                    <span id="adminCnt" class="text-xs font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-lg font-outfit">0 منتج</span>
-                </div>
-                <div class="rounded-xl border border-white/05 bg-white/02 p-3 overflow-y-auto" style="max-height:500px">
-                    <div id="adminList" class="space-y-2">
-                        <div class="flex flex-col items-center py-10 text-gray-700">
-                            <i class="fas fa-circle-notch fa-spin text-2xl mb-2"></i>
-                            <p class="text-xs">جارٍ المزامنة...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-<!-- Toast -->
-<div id="toast"><i id="toastIco" class="fas fa-check-circle text-base"></i><span id="toastTxt"></span></div>
-
-<!-- ═══════════ ALL JAVASCRIPT ═══════════ -->
-<script>
-
-// ═══════════════════════════════
-// 1. FIREBASE INIT
-// ═══════════════════════════════
-const FB_CFG = {
-    apiKey:            "AIzaSyDuZsa00WSYbLD9zhGQKBQh6dS-5JHBZlw",
-    authDomain:        "customer-service-3-aa881.firebaseapp.com",
-    databaseURL:       "https://customer-service-3-aa881-default-rtdb.firebaseio.com",
-    projectId:         "customer-service-3-aa881",
-    storageBucket:     "customer-service-3-aa881.firebasestorage.app",
-    messagingSenderId: "773251933236",
-    appId:             "1:773251933236:web:b2dfafc3051068a1ed1661",
-    measurementId:     "G-89HYWNMFX5"
-};
-
-const ADMIN_PASS = "Ivan!_Mzn@2026_#$*";
-const WA_NUM     = "9647514844125";
-
-let db, storage, fbOK = false;
-
-(function initFirebase() {
-    try {
-        if (!firebase.apps.length) firebase.initializeApp(FB_CFG);
-        db      = firebase.firestore();
-        storage = firebase.storage();
-        // Enable offline persistence
-        db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
-        fbOK = true;
-        setDiag('d-init', 'ok', 'Firebase v9 مهيّأ بنجاح ✓');
-    } catch(e) {
-        setDiag('d-init', 'fail', 'فشل: ' + e.message);
-        console.error('[Ivan Init]', e);
-    }
-})();
-
-// ═══════════════════════════════
-// 2. STATE
-// ═══════════════════════════════
-let allItems     = [];
-let activeFilter = 'all';
-let rulesTimer   = null;
-
-// ═══════════════════════════════
-// 3. HELPERS
-// ═══════════════════════════════
-function setDiag(id, state, msg) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const cls = state === 'ok' ? 'diag-ok' : state === 'fail' ? 'diag-fail' : 'diag-wait';
-    const ico = state === 'ok' ? 'fas fa-check-circle' : state === 'fail' ? 'fas fa-times-circle' : 'fas fa-circle-notch fa-spin';
-    el.className = 'diag-row ' + cls;
-    el.innerHTML = `<i class="${ico} text-sm"></i> ${msg}`;
-}
-
-let _toastT = null;
-function toast(msg, type = 'ok') {
-    const t = document.getElementById('toast');
-    const i = document.getElementById('toastIco');
-    const m = document.getElementById('toastTxt');
-    clearTimeout(_toastT);
-    t.className = type === 'err' ? 'err show' : type === 'warn' ? 'warn show' : 'show';
-    i.className = type === 'err' ? 'fas fa-times-circle text-base'
-                : type === 'warn' ? 'fas fa-exclamation-triangle text-base'
-                : 'fas fa-check-circle text-base';
-    m.innerText = msg;
-    _toastT = setTimeout(() => t.classList.remove('show'), 4500);
-}
-
-// ═══════════════════════════════
-// 4. LOAD OFFERS (public)
-// ═══════════════════════════════
-async function loadOffers() {
-    if (!fbOK) { showGridError('Firebase لم يتهيّأ بعد — أعد تحميل الصفحة'); return; }
-
-    rulesTimer = setTimeout(() => {
-        document.getElementById('rulesHint').classList.remove('hidden');
-    }, 9000);
-
-    try {
-        let snap;
-        try {
-            snap = await db.collection('offers').orderBy('createdAt', 'desc').get();
-        } catch(idxErr) {
-            console.warn('[Ivan] orderBy failed → fallback:', idxErr.code);
-            snap = await db.collection('offers').get();
-        }
-
-        clearTimeout(rulesTimer);
-        document.getElementById('rulesHint').classList.add('hidden');
-        setDiag('d-fs', 'ok', `Firestore متصل — ${snap.size} منتج`);
-
-        allItems = [];
-        snap.forEach(d => allItems.push({ id: d.id, ...d.data() }));
-
-        // manual sort — handles missing createdAt safely
-        allItems.sort((a, b) => {
-            const aT = a.createdAt?.seconds ?? (a.createdAt?.toMillis?.() / 1000 ?? 0);
-            const bT = b.createdAt?.seconds ?? (b.createdAt?.toMillis?.() / 1000 ?? 0);
-            return bT - aT;
-        });
-
-        const bdg = document.getElementById('badge');
-        if (allItems.length > 0) { bdg.innerText = allItems.length; bdg.classList.remove('hidden'); }
-        else bdg.classList.add('hidden');
-
-        renderGrid();
-
-    } catch(err) {
-        clearTimeout(rulesTimer);
-        console.error('[Ivan Load Error]', err.code, err.message);
-        setDiag('d-fs', 'fail', 'Firestore: ' + (err.code || err.message));
-
-        const isAuth = err.code === 'permission-denied' || String(err.code).includes('PERMISSION');
-        document.getElementById('rulesHint').classList.remove('hidden');
-        showGridError(isAuth
-            ? 'تم حظر الوصول — فعّل Firestore Rules: <code>allow read, write: if true;</code>'
-            : `خطأ في الاتصال: ${err.code || err.message}`);
-    }
-}
-
-function showGridError(msg) {
-    document.getElementById('grid').innerHTML = `
-    <div class="col-span-full text-center py-20 rounded-2xl border border-red-500/20 bg-red-500/05">
-        <i class="fas fa-exclamation-triangle text-5xl text-red-500 mb-4 block"></i>
-        <h3 class="text-xl font-black text-red-400 mb-2">تعذّر تحميل البيانات</h3>
-        <p class="text-sm text-gray-500 max-w-sm mx-auto leading-relaxed">${msg}</p>
-        <button onclick="loadOffers()" class="mt-5 px-6 py-2.5 bg-ivan-red hover:bg-red-700 text-white rounded-xl font-bold text-sm transition-all">
-            <i class="fas fa-redo ml-1"></i> إعادة المحاولة
-        </button>
-    </div>`;
-}
-
-// ═══════════════════════════════
-// 5. RENDER GRID
-// ═══════════════════════════════
-function renderGrid() {
-    const g = document.getElementById('grid');
-    const list = activeFilter === 'all' ? allItems : allItems.filter(i => i.mediaType === activeFilter);
-
-    if (list.length === 0) {
-        g.innerHTML = `
-        <div class="col-span-full flex flex-col items-center justify-center py-24 glass rounded-2xl">
-            <div class="w-24 h-24 rounded-2xl bg-white/05 flex items-center justify-center mb-5 shadow-inner">
-                <i class="fas fa-box-open text-5xl text-gray-600"></i>
-            </div>
-            <h3 class="text-xl font-black dark:text-white text-gray-900 mb-2">لا توجد عروض حالياً</h3>
-            <p class="text-sm text-gray-500">انتظرونا بأحدث التشكيلات الحصرية</p>
-            <p class="text-[10px] text-gray-700 mt-1">Hêj nîne — zû tê</p>
-        </div>`;
-        return;
-    }
-
-    g.innerHTML = '';
-    list.forEach((item, idx) => {
-        const isVid = item.mediaType === 'video';
-        const waMsg = encodeURIComponent(`مرحباً معرض إيفان، أود الاستفسار عن:\n( ${item.title} )`);
-        const waLink = `https://wa.me/${WA_NUM}?text=${waMsg}`;
-        const dc = 'd' + Math.min(idx, 5);
-        const bClr = isVid ? 'rgba(59,130,246,0.88)' : 'rgba(177,18,22,0.88)';
-        const bTxt = isVid ? '<i class="fas fa-video ml-1 text-[10px]"></i>فيديو' : '<i class="fas fa-image ml-1 text-[10px]"></i>صورة';
-
-        const mHTML = isVid
-            ? `<video src="${item.mediaUrl}" class="media-el" preload="metadata" playsinline muted
-                onmouseover="this.play()" onmouseleave="this.pause();this.currentTime=0"
-                onerror="this.outerHTML='<div class=\\'media-el flex items-center justify-center text-gray-600\\'><i class=\\'fas fa-video-slash text-4xl\\'></i></div>'"></video>`
-            : `<img src="${item.mediaUrl}" alt="${item.title || ''}" class="media-el" loading="lazy"
-                onerror="this.outerHTML='<div class=\\'media-el flex items-center justify-center text-gray-600\\'><i class=\\'fas fa-image text-4xl\\'></i></div>'">`;
-
-        const dateTxt = item.createdAt?.toDate
-            ? item.createdAt.toDate().toLocaleDateString('ar-IQ')
-            : item.createdAt?.seconds
-            ? new Date(item.createdAt.seconds * 1000).toLocaleDateString('ar-IQ')
-            : '';
-
-        g.innerHTML += `
-        <div class="product-card glass ${dc}">
-            <div class="media-wrap">
-                ${mHTML}
-                <span class="media-badge" style="background:${bClr};backdrop-filter:blur(8px)">${bTxt}</span>
-            </div>
-            <div class="p-5 flex-1 flex flex-col" style="background:rgba(255,255,255,0.02)">
-                <h3 class="font-black text-lg dark:text-white text-gray-900 mb-2 leading-snug">${item.title || 'منتج إيفان'}</h3>
-                ${item.desc
-                    ? `<p class="text-sm text-gray-500 leading-relaxed whitespace-pre-wrap flex-1 mb-4">${item.desc}</p>`
-                    : '<div class="flex-1 mb-2"></div>'
-                }
-                ${dateTxt ? `<p class="text-[10px] text-gray-600 mb-3 font-outfit"><i class="far fa-calendar ml-1"></i>${dateTxt}</p>` : ''}
-                <a href="${waLink}" target="_blank" rel="noopener"
-                   class="wa-btn mt-auto w-full py-3.5 rounded-2xl font-black text-sm text-white flex items-center justify-center gap-2.5 transition-all">
-                    <i class="fab fa-whatsapp text-xl"></i> استفسر والطلب الآن
+                    <h3 class="text-2xl font-bold mb-1">فايبر إيفان</h3>
+                    <p class="text-sm opacity-70">مجتمع راقي لعشاق التميز</p>
+                    <span class="inline-block mt-5 px-6 py-2 rounded-full font-bold transition-all join-btn">انضم إلينا</span>
                 </a>
             </div>
-        </div>`;
-    });
-}
+        </div>
 
-// ═══════════════════════════════
-// 6. FILTER
-// ═══════════════════════════════
-window.setFilter = function(f, btn) {
-    activeFilter = f;
-    document.querySelectorAll('.f-pill').forEach(b => b.classList.remove('on'));
-    btn.classList.add('on');
-    renderGrid();
-};
+        <!-- المنتجات -->
+        <div class="mb-10">
+            <h2 class="text-2xl font-black dark:text-white text-gray-800 text-center mb-2">القطع المتوفرة</h2>
+            <p class="text-center text-gray-500 text-sm mb-8">أحدث التشكيلات – جاهزة للطلب</p>
+        </div>
 
-// ═══════════════════════════════
-// 7. FILE PICK & PREVIEW
-// ═══════════════════════════════
-window.onFilePick = function(input) {
-    const f = input.files[0];
-    if (f) showPreview(f);
-};
+        <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- يتم تعبئتها عبر JS -->
+        </div>
 
-function showPreview(file) {
-    const n = file.name.length > 36 ? file.name.slice(0,33)+'...' : file.name;
-    document.getElementById('fileName').innerText = n;
-    const wrap = document.getElementById('previewWrap');
-    const img  = document.getElementById('previewImg');
-    const vid  = document.getElementById('previewVid');
-    wrap.classList.add('show');
-    if (file.type.startsWith('image/')) {
-        img.src = URL.createObjectURL(file);
-        img.classList.remove('hidden');
-        vid.classList.add('hidden');
-    } else {
-        img.classList.add('hidden');
-        vid.classList.remove('hidden');
-        document.getElementById('previewVidName').innerText = file.name;
-    }
-}
+        <!-- خدمة العملاء -->
+        <div class="mt-16 glass p-8 rounded-3xl text-center border border-ivan-red/30 relative overflow-hidden">
+            <div class="absolute -top-8 -right-8 w-32 h-32 bg-ivan-red/20 rounded-full blur-2xl"></div>
+            <h3 class="text-xl font-black mb-2">خدمة العملاء</h3>
+            <p class="text-sm text-gray-500 mb-5">للطلب أو الاستفسار، اتصل بنا أو راسلنا على واتساب / فايبر</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="tel:+9647514844125" class="inline-flex items-center gap-2 bg-gray-900 dark:bg-white dark:text-black text-white px-5 py-2.5 rounded-xl font-bold hover:scale-105 transition-all shadow-md text-sm">
+                    <i class="fas fa-phone-alt"></i> +964 751 484 4125
+                </a>
+                <a href="https://wa.me/9647514844125" class="inline-flex items-center gap-2 bg-whatsapp text-white px-5 py-2.5 rounded-xl font-bold hover:scale-105 transition-all text-sm">
+                    <i class="fab fa-whatsapp"></i> واتساب
+                </a>
+                <a href="viber://add?number=9647514844125" class="inline-flex items-center gap-2 bg-viber text-white px-5 py-2.5 rounded-xl font-bold hover:scale-105 transition-all text-sm">
+                    <i class="fab fa-viber"></i> فايبر
+                </a>
+            </div>
+        </div>
+    </main>
 
-window.onDrop = function(e) {
-    e.preventDefault();
-    document.getElementById('dropZone').classList.remove('over');
-    const f = e.dataTransfer.files[0];
-    if (!f) return;
-    const dt = new DataTransfer(); dt.items.add(f);
-    document.getElementById('fileInput').files = dt.files;
-    showPreview(f);
-};
+    <footer class="py-8 text-center text-xs text-gray-500 border-t border-white/10 mt-8">
+        <p>© 2026 ivan shuw — جميع الحقوق محفوظة</p>
+        <p class="mt-1 text-[10px]">Her şev nûtirîn bi me re</p>
+    </footer>
 
-// ═══════════════════════════════
-// 8. UPLOAD ← BULLETPROOF
-// ═══════════════════════════════
-window.doUpload = async function() {
-    if (!fbOK) { toast('Firebase غير متصل', 'err'); return; }
+    <div id="demoToast" class="toast-msg"><i class="fas fa-info-circle ml-2"></i><span></span></div>
 
-    const title = document.getElementById('offerTitle').value.trim();
-    const desc  = document.getElementById('offerDesc').value.trim();
-    const file  = document.getElementById('fileInput').files[0];
-    const btn   = document.getElementById('uploadBtn');
+    <script>
+        // المنتجات (صور فقط)
+        const productsData = [
+            { title: "سيت سفري صغير مع 4 كراسي", desc: "40 ألف دينار", mediaUrl: "images/product1.jpg" },
+            { title: "غرفة نوم 5 قطع جديدة", desc: "350 دولار", mediaUrl: "images/product2.jpg" },
+            { title: "غسالة حوضين ماركة جنرال كولد", desc: "215 دولار", mediaUrl: "images/product3.jpg" },
+            { title: "جزامة أحذية خشب جديد", desc: "30 ألف دينار", mediaUrl: "images/product4.jpg" },
+            { title: "كرسي مكتبي جديد", desc: "40 ألف دينار", mediaUrl: "images/product5.jpg" },
+            { title: "ميز مكتب جديد", desc: "115 ألف دينار", mediaUrl: "images/product6.jpg" },
+            { title: "ديوان 10 نفر جديد", desc: "400 ألف دينار", mediaUrl: "images/product7.jpg" }
+        ];
 
-    // ── Validate ──
-    if (!title) { toast('أدخل اسم المنتج أولاً', 'err'); document.getElementById('offerTitle').focus(); return; }
-    if (!file)  { toast('اختر صورة أو فيديو', 'err'); return; }
-    if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) { toast('نوع الملف غير مدعوم', 'err'); return; }
-    if (file.size > 52428800) { toast('الملف أكبر من 50MB', 'err'); return; }
-
-    // ── UI Lock ──
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin ml-1"></i> جارٍ الاتصال...';
-    btn.style.opacity = '0.7';
-
-    const pw  = document.getElementById('progWrap');
-    const pf  = document.getElementById('progFill');
-    const pp  = document.getElementById('progPct');
-    const ps  = document.getElementById('progSub');
-    const pl  = document.getElementById('progLabel');
-
-    pw.classList.remove('hidden');
-    pf.style.width = '0%';
-    pf.className = 'prog-fill anim';
-    pp.innerText  = '0%';
-    ps.innerText  = 'تحضير الملف...';
-    pl.innerHTML  = '<i class="fas fa-spinner fa-spin text-ivan-red text-xs"></i> جارٍ الرفع للسحابة...';
-
-    // ── Build path ──
-    const ext      = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
-    const safeName = `ivan_${Date.now()}.${ext}`;
-    const path     = `offers/${safeName}`;
-
-    try {
-        // ── STEP 1: Upload ──
-        ps.innerText = 'الاتصال بـ Firebase Storage...';
-        const storRef    = storage.ref(path);
-        const uploadTask = storRef.put(file, { contentType: file.type });
-
-        await new Promise((resolve, reject) => {
-            uploadTask.on(
-                'state_changed',
-                snap => {
-                    const pct = Math.round(snap.bytesTransferred / snap.totalBytes * 100);
-                    pf.style.width = pct + '%';
-                    pp.innerText   = pct + '%';
-                    const mb  = (snap.bytesTransferred / 1048576).toFixed(1);
-                    const tot = (snap.totalBytes / 1048576).toFixed(1);
-                    ps.innerText = `${mb} / ${tot} MB`;
-                    if (pct > 0) {
-                        pf.className = 'prog-fill';
-                        btn.innerHTML = `<i class="fas fa-cloud-upload-alt ml-1"></i> جارٍ الرفع ${pct}%`;
-                    }
-                },
-                err => {
-                    console.error('[Ivan Storage]', err.code, err.message);
-                    reject(err);
-                },
-                resolve
-            );
-        });
-
-        // ── STEP 2: Get URL ──
-        pf.className = 'prog-fill done'; pf.style.width = '100%';
-        pl.innerHTML = '<i class="fas fa-check-circle text-green-400 text-xs"></i> اكتمل الرفع — جارٍ الحفظ...';
-        ps.innerText = 'استخراج رابط الملف...';
-
-        const dlURL = await uploadTask.snapshot.ref.getDownloadURL();
-        setDiag('d-st', 'ok', 'Storage متصل — الرفع يعمل ✓');
-
-        // ── STEP 3: Firestore ──
-        ps.innerText = 'حفظ البيانات في Firestore...';
-        const docRef = await db.collection('offers').add({
-            title,
-            desc:        desc || '',
-            mediaUrl:    dlURL,
-            mediaType:   file.type.startsWith('video') ? 'video' : 'image',
-            storagePath: path,
-            fileName:    safeName,
-            fileSize:    file.size,
-            createdAt:   firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        setDiag('d-fs', 'ok', `Firestore محفوظ ✓ — ${docRef.id.slice(0,8)}...`);
-        pp.innerText = '✓'; ps.innerText = 'تم النشر بنجاح';
-        pl.innerHTML = '<i class="fas fa-check-circle text-green-400 text-xs"></i> اكتمل بنجاح';
-
-        toast('تم نشر المنتج بنجاح ✅');
-        resetForm();
-        loadOffers();
-        loadAdminItems();
-
-    } catch(err) {
-        console.error('[Ivan Upload]', err.code, err.message);
-        pf.className = 'prog-fill'; pf.style.background = '#EF4444'; pf.style.width = '100%';
-        pp.innerText = '✗';
-
-        const errMap = {
-            'storage/unauthorized':   'Storage Rules مقفلة → Firebase Console → Storage → Rules → غيّر false إلى true ثم Publish',
-            'storage/canceled':       'تم إلغاء الرفع',
-            'storage/quota-exceeded': 'حصة Firebase المجانية انتهت',
-            'storage/unknown':        'خطأ غير معروف — تحقق من اتصال الإنترنت أو Storage Rules',
-            'storage/retry-limit-exceeded': 'انقطع الإنترنت أثناء الرفع — أعد المحاولة',
-            'permission-denied':      'Firestore Rules مقفلة → Firebase → Firestore → Rules → true ثم Publish',
-            'unavailable':            'Firebase غير متاح — تحقق من الإنترنت',
-        };
-        const msg = errMap[err.code] || `خطأ: ${err.code || err.message}`;
-        ps.innerText = msg;
-        pl.innerHTML = '<i class="fas fa-times-circle text-red-400 text-xs"></i> فشل الرفع';
-        toast(msg.slice(0, 80), 'err');
-        setTimeout(() => pw.classList.add('hidden'), 8000);
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-paper-plane ml-1"></i> نشر المنتج الآن';
-        btn.style.opacity = '1';
-    }
-};
-
-function resetForm() {
-    ['offerTitle','offerDesc'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('fileInput').value = '';
-    document.getElementById('fileName').innerText = 'اضغط أو اسحب الملف هنا';
-    document.getElementById('previewWrap').classList.remove('show');
-    document.getElementById('previewImg').src = '';
-    document.getElementById('previewVid').classList.add('hidden');
-    const pf = document.getElementById('progFill');
-    pf.style.width = '0%'; pf.className = 'prog-fill';
-    document.getElementById('progWrap').classList.add('hidden');
-}
-
-// ═══════════════════════════════
-// 9. ADMIN LIST
-// ═══════════════════════════════
-async function loadAdminItems() {
-    const list = document.getElementById('adminList');
-    const cnt  = document.getElementById('adminCnt');
-    list.innerHTML = `<div class="flex flex-col items-center py-10 text-gray-700"><i class="fas fa-spinner fa-spin text-2xl mb-2"></i><p class="text-xs">مزامنة...</p></div>`;
-
-    try {
-        let snap;
-        try { snap = await db.collection('offers').orderBy('createdAt','desc').get(); }
-        catch { snap = await db.collection('offers').get(); }
-
-        cnt.innerText = `${snap.size} منتج`;
-        if (snap.empty) {
-            list.innerHTML = `<div class="text-center py-12 text-gray-600 text-xs font-bold rounded-xl border-2 border-dashed border-white/06">السحابة فارغة — ارفع أول منتج</div>`;
-            return;
+        const waNumber = "9647514844125";
+        function getWhatsappLink(title) {
+            const msg = `مرحباً، أود الاستفسار عن: ${title}`;
+            return `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
         }
-        list.innerHTML = '';
-        snap.forEach(d => {
-            const data = d.data();
-            const ico  = data.mediaType === 'video' ? 'fas fa-video text-blue-400' : 'fas fa-image text-green-400';
-            const date = data.createdAt?.toDate
-                ? data.createdAt.toDate().toLocaleDateString('en-GB')
-                : data.createdAt?.seconds
-                ? new Date(data.createdAt.seconds * 1000).toLocaleDateString('en-GB')
-                : '—';
-            const sp = (data.storagePath || '').replace(/'/g, "\\'").replace(/"/g, '\\"');
-            list.innerHTML += `
-            <div class="flex items-center gap-3 p-3 rounded-xl border border-white/04 hover:border-white/08 hover:bg-white/03 transition-all">
-                <div class="w-10 h-10 rounded-xl bg-white/04 flex items-center justify-center text-lg shrink-0"><i class="${ico}"></i></div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-sm font-bold dark:text-white text-gray-900 truncate">${data.title || '—'}</p>
-                    <p class="text-[10px] text-gray-600 mt-0.5 font-outfit"><i class="far fa-clock ml-0.5"></i>${date}</p>
-                </div>
-                <button onclick="doDelete('${d.id}','${sp}')"
-                    class="w-9 h-9 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shrink-0 text-sm">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>`;
-        });
-    } catch(err) {
-        console.error('[Ivan AdminList]', err);
-        list.innerHTML = `<div class="text-center py-8 text-red-400 text-xs font-bold bg-red-500/08 rounded-xl border border-red-500/15">
-            خطأ: ${err.code || err.message}</div>`;
-    }
-}
 
-// ═══════════════════════════════
-// 10. DELETE
-// ═══════════════════════════════
-window.doDelete = async function(docId, sp) {
-    if (!confirm('حذف هذا المنتج نهائياً؟')) return;
-    try {
-        await db.collection('offers').doc(docId).delete();
-        if (sp) {
-            try { await storage.ref(sp).delete(); }
-            catch(se) { console.warn('[Ivan] Storage skip:', se.code); }
+        function renderProducts() {
+            const grid = document.getElementById("productsGrid");
+            if (!grid) return;
+            let html = "";
+            productsData.forEach((item, idx) => {
+                const waLink = getWhatsappLink(item.title);
+                html += `
+                <div class="product-card glass" style="animation-delay: ${idx * 0.05}s">
+                    <div class="media-wrap">
+                        <img src="${item.mediaUrl}" class="media-el" loading="lazy" alt="${item.title}" onerror="this.src='https://placehold.co/600x400?text=صورة+غير+موجودة'">
+                        <span class="media-badge"><i class="fas fa-image ml-1"></i> جديد</span>
+                    </div>
+                    <div class="p-4 flex flex-col">
+                        <h3 class="text-lg font-black dark:text-white text-gray-800 mb-1">${item.title}</h3>
+                        <p class="text-ivan-red font-bold text-md mb-3">${item.desc}</p>
+                        <a href="${waLink}" target="_blank" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-2.5 rounded-xl transition-all w-full text-sm shadow-md">
+                            <i class="fab fa-whatsapp text-lg"></i> استفسر والطلب
+                        </a>
+                    </div>
+                </div>`;
+            });
+            grid.innerHTML = html;
         }
-        toast('تم الحذف نهائياً 🗑️');
-        loadOffers();
-        loadAdminItems();
-    } catch(e) {
-        console.error('[Ivan Delete]', e);
-        toast('فشل الحذف: ' + (e.code || e.message), 'err');
-    }
-};
 
-// ═══════════════════════════════
-// 11. ADMIN GATE (10 rapid taps)
-// ═══════════════════════════════
-let _tapN = 0, _tapT = null;
-window.handleAdminTap = function() {
-    _tapN++;
-    clearTimeout(_tapT);
-    _tapT = setTimeout(() => _tapN = 0, 2200);
-    if (_tapN >= 10) { _tapN = 0; openModal('loginModal'); }
-};
+        // التحكم بالوضع الداكن والفاتح مع تغيير لون "انضم إلينا" تلقائياً
+        function updateJoinButtons() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const btns = document.querySelectorAll('.join-btn');
+            btns.forEach(btn => {
+                if (isDark) {
+                    btn.classList.add('bg-white', 'text-gray-900');
+                    btn.classList.remove('bg-gray-800', 'text-white');
+                } else {
+                    btn.classList.add('bg-gray-800', 'text-white');
+                    btn.classList.remove('bg-white', 'text-gray-900');
+                }
+            });
+        }
 
-window.checkPwd = function() {
-    const v = document.getElementById('pwdInput').value;
-    const e = document.getElementById('pwdErr');
-    if (v === ADMIN_PASS) {
-        closeModal('loginModal');
-        setTimeout(() => { openModal('adminModal'); runDiag(); loadAdminItems(); }, 320);
-    } else {
-        e.classList.remove('hidden');
-        document.getElementById('pwdInput').value = '';
-        document.getElementById('pwdInput').focus();
-        setTimeout(() => e.classList.add('hidden'), 3500);
-    }
-};
+        const themeBtn = document.getElementById("themeToggle");
+        const htmlElem = document.documentElement;
+        if (localStorage.getItem("ivan-theme") === "light") {
+            htmlElem.classList.remove("dark");
+            themeBtn.innerHTML = '<i class="fas fa-sun text-yellow-500"></i>';
+        } else {
+            htmlElem.classList.add("dark");
+            themeBtn.innerHTML = '<i class="fas fa-moon text-gray-300"></i>';
+        }
+        updateJoinButtons();
 
-// ═══════════════════════════════
-// 12. DIAGNOSTICS
-// ═══════════════════════════════
-async function runDiag() {
-    setDiag('d-fs', 'wait', 'اختبار Firestore...');
-    setDiag('d-st', 'wait', 'اختبار Storage...');
+        themeBtn.addEventListener("click", () => {
+            htmlElem.classList.toggle("dark");
+            const isDark = htmlElem.classList.contains("dark");
+            localStorage.setItem("ivan-theme", isDark ? "dark" : "light");
+            themeBtn.innerHTML = isDark ? '<i class="fas fa-moon text-gray-300"></i>' : '<i class="fas fa-sun text-yellow-500"></i>';
+            updateJoinButtons();
+        });
 
-    // Firestore test
-    try {
-        await db.collection('_ping').limit(1).get();
-        setDiag('d-fs', 'ok', 'Firestore متصل ✓');
-    } catch(e) {
-        setDiag('d-fs', 'fail', 'Firestore مقفل: ' + e.code + ' — غيّر Rules إلى true');
-    }
+        renderProducts();
 
-    // Storage test (upload tiny text blob)
-    try {
-        const testRef = storage.ref(`_test/${Date.now()}.txt`);
-        await testRef.putString('ping');
-        await testRef.delete().catch(() => {});
-        setDiag('d-st', 'ok', 'Storage متصل ✓ — الرفع مفعّل');
-    } catch(e) {
-        setDiag('d-st', 'fail', 'Storage مقفل: ' + e.code + ' — غيّر Rules إلى true');
-    }
-}
-
-// ═══════════════════════════════
-// 13. MODAL HELPERS
-// ═══════════════════════════════
-function openModal(id) {
-    document.getElementById(id).classList.add('active');
-    document.body.style.overflow = 'hidden';
-    if (id === 'loginModal') {
-        document.getElementById('pwdErr').classList.add('hidden');
-        document.getElementById('pwdInput').value = '';
-        setTimeout(() => document.getElementById('pwdInput').focus(), 200);
-    }
-}
-function closeModal(id) {
-    document.getElementById(id).classList.remove('active');
-    if (!document.querySelector('.modal-overlay.active')) document.body.style.overflow = '';
-}
-window.openModal = openModal;
-window.closeModal = closeModal;
-document.querySelectorAll('.modal-overlay').forEach(el => {
-    el.addEventListener('click', e => { if (e.target === el) closeModal(el.id); });
-});
-
-// ═══════════════════════════════
-// 14. THEME
-// ═══════════════════════════════
-const _html = document.documentElement;
-document.getElementById('themeBtn').addEventListener('click', () => {
-    _html.classList.toggle('dark');
-    localStorage.setItem('ivan-theme', _html.classList.contains('dark') ? 'dark' : 'light');
-});
-
-// ═══════════════════════════════
-// 15. INIT
-// ═══════════════════════════════
-window.addEventListener('DOMContentLoaded', loadOffers);
-</script>
-
+        // رسالة توست اختيارية
+        function showToast(msg) {
+            const t = document.getElementById("demoToast");
+            t.querySelector("span").innerText = msg;
+            t.classList.add("show");
+            setTimeout(() => t.classList.remove("show"), 2000);
+        }
+    </script>
 </body>
 </html>
